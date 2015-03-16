@@ -171,6 +171,10 @@
 				RelativePath=".\CNP_Protocol1.h"
 				>
 			</File>
+			<File
+				RelativePath=".\endianness.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="资源文件"
