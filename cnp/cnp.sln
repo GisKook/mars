@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cnp", "cnp\cnp.vcproj", "{A278ACF8-8B9D-401D-A775-5A526F05A84D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cnpserver", "cnpserver\cnpserver.vcproj", "{68AC6BAE-B76C-432F-8061-A0C0B0BAF55B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cnpclient", "cnpclient\cnpclient.vcproj", "{888B0A87-46AA-4C51-B97C-176B4D1C8959}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +17,14 @@ Global
 		{A278ACF8-8B9D-401D-A775-5A526F05A84D}.Debug|Win32.Build.0 = Debug|Win32
 		{A278ACF8-8B9D-401D-A775-5A526F05A84D}.Release|Win32.ActiveCfg = Release|Win32
 		{A278ACF8-8B9D-401D-A775-5A526F05A84D}.Release|Win32.Build.0 = Release|Win32
+		{68AC6BAE-B76C-432F-8061-A0C0B0BAF55B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{68AC6BAE-B76C-432F-8061-A0C0B0BAF55B}.Debug|Win32.Build.0 = Debug|Win32
+		{68AC6BAE-B76C-432F-8061-A0C0B0BAF55B}.Release|Win32.ActiveCfg = Release|Win32
+		{68AC6BAE-B76C-432F-8061-A0C0B0BAF55B}.Release|Win32.Build.0 = Release|Win32
+		{888B0A87-46AA-4C51-B97C-176B4D1C8959}.Debug|Win32.ActiveCfg = Debug|Win32
+		{888B0A87-46AA-4C51-B97C-176B4D1C8959}.Debug|Win32.Build.0 = Debug|Win32
+		{888B0A87-46AA-4C51-B97C-176B4D1C8959}.Release|Win32.ActiveCfg = Release|Win32
+		{888B0A87-46AA-4C51-B97C-176B4D1C8959}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
