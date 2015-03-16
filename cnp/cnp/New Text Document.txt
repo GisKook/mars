@@ -1,0 +1,14 @@
+Project is to implement a software for the next generation of bank ATM machines. The following functionalities should be implemented:
+
+Creating account: (first and last names, pin, DL, SSN, and email address)
+Authentication of a valid user (first name and pin)
+Deposit (resolve problem of the bolt in the machine is full)
+Withdraw (resolve problem of the bolt in the machine not having enough money)
+Verification of action
+Balance
+Show last n transactions
+Buy stamps
+Terminate the transaction
+
+We have created a application layer standard that will allow any client to connect to the server. 
+I have provided headers or structures(.h file) in another attachment, using those functionalities you need to devolop this project.
