@@ -37,6 +37,16 @@ static union{
 	(((unsigned int)(x)&(unsigned int)0x0000ff00UL)<<8)|\
 	(((unsigned int)(x)&(unsigned int)0x00ff0000UL)>>8)|\
 	(((unsigned int)(x)&(unsigned int)0xff000000UL)>>24)));
+#define swap64(x) \
+	((unsigned long long)(\
+	(((unsigned long long)(x)&(unsigned long long)0x00000000000000ff)<<56)|\
+	(((unsigned long long)(x)&(unsigned long long)0x000000000000ff00)<<40)|\
+	(((unsigned long long)(x)&(unsigned long long)0x0000000000ff0000)<<24)|\
+	(((unsigned long long)(x)&(unsigned long long)0x00000000ff000000)<<8)|\
+	(((unsigned long long)(x)&(unsigned long long)0x000000ff00000000)>>8)|\
+	(((unsigned long long)(x)&(unsigned long long)0x0000ff0000000000)>>24)|\
+	(((unsigned long long)(x)&(unsigned long long)0x00ff000000000000)>>40)|\
+	(((unsigned long long)(x)&(unsigned long long)0xff00000000000000)>>56)));
 #endif
 
 #endif

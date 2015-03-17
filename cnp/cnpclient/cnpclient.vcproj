@@ -167,6 +167,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\cnpclient_response.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\cpnclient.cpp"
 				>
 			</File>
