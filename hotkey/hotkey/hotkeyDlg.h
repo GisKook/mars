@@ -20,6 +20,10 @@ public:
 private:
 	CTrayIcon m_trayicon;
 // Implementation
+private:
+	CString GetClipboardText();
+	void SetClipboardText(CString text);
+	CString ClearLinebreak(CString text);
 protected:
 	HICON m_hIcon;
 

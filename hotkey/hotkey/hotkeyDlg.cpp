@@ -111,7 +111,7 @@ BOOL ChotkeyDlg::OnInitDialog()
 	if(!::RegisterHotKey(this->m_hWnd,ID_COPY,MOD_CONTROL | MOD_ALT,'C')){
 		MessageBox("ctrl+alt+C Register failed");
 	}
-	if(!::RegisterHotKey(this->m_hWnd,ID_COPY,MOD_CONTROL | MOD_ALT,'V')){
+	if(!::RegisterHotKey(this->m_hWnd,ID_PASTE,MOD_CONTROL | MOD_ALT,'V')){
 		MessageBox("ctrl+alt+V Register failed");
 	}
 	//::RegisterHotKey(this->GetSafeHwnd(),ID_PASTE,MOD_CONTROL|MOD_ALT,'v');
@@ -169,10 +169,10 @@ HCURSOR ChotkeyDlg::OnQueryDragIcon()
 
 LRESULT ChotkeyDlg::OnTrayNotification( WPARAM wParam,LPARAM lParam )
 { 
-///	if(LOWORD(lParam) == WM_LBUTTONDBLCLK) 
-///	{
-///		ShowWindow(SW_SHOW);
-///	}
+	///	if(LOWORD(lParam) == WM_LBUTTONDBLCLK) 
+	///	{
+	///		ShowWindow(SW_SHOW);
+	///	}
 	return m_trayicon.OnTrayNotification(wParam, lParam);
 }
 
@@ -228,8 +228,105 @@ void ChotkeyDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 	if (nHotKeyId == ID_COPY){
+		keybd_event(VkKeyScan('C'),0xae, KEYEVENTF_KEYUP,0); // 'C' Release
+		keybd_event(VK_CONTROL,0x9d,KEYEVENTF_KEYUP,0); // Ctrl Release
+		keybd_event(VK_MENU,0xb8,KEYEVENTF_KEYUP,0); // Alt Release
+
+		keybd_event(VK_CONTROL,0x9d,0 , 0); // Ctrl Press
+		keybd_event(VkKeyScan('C'),0xae,0 , 0); // 'C' Press
+		keybd_event(VkKeyScan('C'),0xae, KEYEVENTF_KEYUP,0); // 'C' Release
+		keybd_event(VK_CONTROL,0x9d,KEYEVENTF_KEYUP,0); // Ctrl Release
 	}else if(nHotKeyId == ID_PASTE){
+		keybd_event(VkKeyScan('V'),0xaf, KEYEVENTF_KEYUP,0); // 'C' Release
+		keybd_event(VK_CONTROL,0x9d,KEYEVENTF_KEYUP,0); // Ctrl Release
+		keybd_event(VK_MENU,0xb8,KEYEVENTF_KEYUP,0); // Alt Release
+		CString text = GetClipboardText();
+		if(!text.IsEmpty()){
+			CString textwithoutlinebreak = ClearLinebreak(text);
+			SetClipboardText(textwithoutlinebreak);
+		}
+
+		keybd_event(VK_CONTROL,0x9d,0 , 0); // Ctrl Press
+		keybd_event(VkKeyScan('V'),0xaf,0 , 0); // 'C' Press
+		keybd_event(VkKeyScan('V'),0xaf, KEYEVENTF_KEYUP,0); // 'C' Release
+		keybd_event(VK_CONTROL,0x9d,KEYEVENTF_KEYUP,0); // Ctrl Release
 	}
 
-	CDialog::OnHotKey(nHotKeyId, nKey1, nKey2);
+	//CDialog::OnHotKey(nHotKeyId, nKey1, nKey2);
+}
+
+CString ChotkeyDlg::GetClipboardText()
+{ 
+	// Try opening the clipboard
+	if (!OpenClipboard()){
+		return "";
+	}
+
+	// Get handle of clipboard object for ANSI text
+	HANDLE hData = GetClipboardData(CF_TEXT);
+	if (hData == NULL){
+		return "";
+	}
+	// Lock the handle to get the actual text pointer
+	char * pszText = static_cast<char*>( GlobalLock(hData) );
+	if (pszText == NULL){
+		return "";
+	}
+	// Save text in a string class instance
+	CString text( pszText );
+
+	// Release the lock
+	GlobalUnlock( hData );
+
+	// Release the clipboard
+	CloseClipboard();
+
+	return text;
+}
+
+void ChotkeyDlg::SetClipboardText( CString text )
+{
+	if ( !OpenClipboard() )
+	{
+		AfxMessageBox( _T("Cannot open the Clipboard") );
+		return;
+	}
+	// Remove the current Clipboard contents 
+	if( !EmptyClipboard() )
+	{
+		AfxMessageBox( _T("Cannot empty the Clipboard") );
+		return;
+	}
+	// Get the currently selected data
+	int textlen = strlen(text.GetBuffer());
+	char * temp = (char *)malloc(textlen+3);
+	memcpy(temp, text.GetBuffer(), textlen);
+	temp[textlen] = '\r';
+	temp[textlen+1] = '\n';
+	temp[textlen+2] = 0;
+	HGLOBAL hGlob = GlobalAlloc(GMEM_FIXED, textlen+3);
+	strcpy_s((char*)hGlob, textlen+3,temp); 
+	free(temp);
+	// For the appropriate data formats... 
+	if ( ::SetClipboardData( CF_TEXT, hGlob ) == NULL )
+	{
+		CString msg;
+		msg.Format(_T("Unable to set Clipboard data, error: %d"), GetLastError());
+		AfxMessageBox( msg );
+		CloseClipboard();
+		GlobalFree(hGlob);
+		return;
+	}
+	CloseClipboard();
+}
+
+CString ChotkeyDlg::ClearLinebreak( CString text ){
+	CString strwithoutlinebreak;
+	int textlen = text.GetLength();
+	for (int i = 0; i < textlen; ++i){
+		if (text[i] != '\r' && text[i] != '\n') {
+			strwithoutlinebreak += text[i];
+		}
+	}
+	return strwithoutlinebreak;
 }
