@@ -19,6 +19,9 @@ public:
 
 private:
 	CTrayIcon m_trayicon;
+	bool m_bcheck;
+	HICON m_hCheck;
+	HICON m_hUncheck;
 // Implementation
 private:
 	CString GetClipboardText();

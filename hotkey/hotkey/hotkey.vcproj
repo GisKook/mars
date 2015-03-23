@@ -254,6 +254,10 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
+				RelativePath=".\res\check.ico"
+				>
+			</File>
+			<File
 				RelativePath=".\res\copy.ico"
 				>
 			</File>
@@ -267,6 +271,10 @@
 			</File>
 			<File
 				RelativePath=".\res\hotkey.rc2"
+				>
+			</File>
+			<File
+				RelativePath=".\res\uncheck.ico"
 				>
 			</File>
 		</Filter>

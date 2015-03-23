@@ -106,14 +106,17 @@ BOOL ChotkeyDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-	HICON hIcon = AfxGetApp()->LoadIcon(IDI_ICON_TRAY); 
-	m_trayicon.Create(this, WM_ICON_NOTIFY, "HOTKEY",hIcon,IDR_MENU_TRAYICON);
+	m_hCheck = AfxGetApp()->LoadIcon(IDI_ICON_CHECK); 
+	m_hUncheck = AfxGetApp()->LoadIcon(IDI_ICON_UNCHECK); 
+	m_bcheck = false;
+	m_trayicon.Create(this, WM_ICON_NOTIFY, "Paste with line break",m_hUncheck,IDR_MENU_TRAYICON);
 	if(!::RegisterHotKey(this->m_hWnd,ID_COPY,MOD_CONTROL | MOD_ALT,'C')){
 		MessageBox("ctrl+alt+C Register failed");
 	}
 	if(!::RegisterHotKey(this->m_hWnd,ID_PASTE,MOD_CONTROL | MOD_ALT,'V')){
 		MessageBox("ctrl+alt+V Register failed");
 	}
+	
 	//::RegisterHotKey(this->GetSafeHwnd(),ID_PASTE,MOD_CONTROL|MOD_ALT,'v');
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -169,10 +172,17 @@ HCURSOR ChotkeyDlg::OnQueryDragIcon()
 
 LRESULT ChotkeyDlg::OnTrayNotification( WPARAM wParam,LPARAM lParam )
 { 
-	///	if(LOWORD(lParam) == WM_LBUTTONDBLCLK) 
-	///	{
-	///		ShowWindow(SW_SHOW);
-	///	}
+	if(LOWORD(lParam) == WM_LBUTTONDOWN) 
+	{
+		m_bcheck = !m_bcheck;
+		if(m_bcheck){
+			m_trayicon.SetIcon(m_hCheck); 
+			m_trayicon.SetTooltipText("Paste without line break");
+		}else{
+			m_trayicon.SetIcon(m_hUncheck);
+			m_trayicon.SetTooltipText("Paste with line break");
+		}
+	}
 	return m_trayicon.OnTrayNotification(wParam, lParam);
 }
 
@@ -227,7 +237,7 @@ void ChotkeyDlg::OnNcPaint()
 void ChotkeyDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	if (nHotKeyId == ID_COPY){
+	if (nHotKeyId == ID_COPY && m_bcheck){
 		keybd_event(VkKeyScan('C'),0xae, KEYEVENTF_KEYUP,0); // 'C' Release
 		keybd_event(VK_CONTROL,0x9d,KEYEVENTF_KEYUP,0); // Ctrl Release
 		keybd_event(VK_MENU,0xb8,KEYEVENTF_KEYUP,0); // Alt Release
@@ -236,7 +246,7 @@ void ChotkeyDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 		keybd_event(VkKeyScan('C'),0xae,0 , 0); // 'C' Press
 		keybd_event(VkKeyScan('C'),0xae, KEYEVENTF_KEYUP,0); // 'C' Release
 		keybd_event(VK_CONTROL,0x9d,KEYEVENTF_KEYUP,0); // Ctrl Release
-	}else if(nHotKeyId == ID_PASTE){
+	}else if(nHotKeyId == ID_PASTE && m_bcheck){
 		keybd_event(VkKeyScan('V'),0xaf, KEYEVENTF_KEYUP,0); // 'C' Release
 		keybd_event(VK_CONTROL,0x9d,KEYEVENTF_KEYUP,0); // Ctrl Release
 		keybd_event(VK_MENU,0xb8,KEYEVENTF_KEYUP,0); // Alt Release

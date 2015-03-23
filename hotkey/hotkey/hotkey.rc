@@ -70,8 +70,9 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "res\\hotkey.ico"
-IDI_ICON_TRAY           ICON                    "res\\copy.ico"
+IDR_MAINFRAME           ICON                    "res\\copy.ico"
+IDI_ICON_CHECK          ICON                    "res\\check.ico"
+IDI_ICON_UNCHECK        ICON                    "res\\uncheck.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -109,7 +110,7 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSM
 CAPTION "About hotkey"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
+    ICON            128,IDC_STATIC,14,14,21,20
     LTEXT           "hotkey, Version 1.0",IDC_STATIC,42,14,114,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2015",IDC_STATIC,42,26,114,8
     DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
