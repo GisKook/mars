@@ -16,7 +16,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Chinese (P.R.C.) resources
+// 中文(中华人民共和国) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 #ifdef _WIN32
@@ -71,12 +71,12 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\3dmodeling.ico"
-#endif    // Chinese (P.R.C.) resources
+#endif    // 中文(中华人民共和国) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// 英语(美国) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 #ifdef _WIN32
@@ -106,13 +106,13 @@ EXSTYLE WS_EX_APPWINDOW
 CAPTION "3dmodeling"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    PUSHBUTTON      "Cancel",IDCANCEL,299,265,50,14
-    EDITTEXT        IDC_EDIT_INPUT,7,18,342,184,ES_AUTOHSCROLL
+    PUSHBUTTON      "Close",IDCANCEL,299,265,50,14
+    EDITTEXT        IDC_EDIT_INPUT,7,18,342,184,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN
     GROUPBOX        "Input colors",IDC_STATIC,7,7,342,196
     PUSHBUTTON      "Browsing...",IDC_BUTTON_FILEPATH,299,237,50,14
     EDITTEXT        IDC_EDIT_FILEPATH,7,237,273,14,ES_AUTOHSCROLL
     PUSHBUTTON      "Generate",IDC_BUTTON_GENERATE,230,265,50,14
-    LTEXT           "",IDC_STATIC,7,283,342,8
+    LTEXT           "",IDC_STATIC_TIPS,7,283,342,8
     PUSHBUTTON      "Format",IDC_BUTTON_FORMAT,299,209,50,14
 END
 
@@ -193,7 +193,7 @@ BEGIN
     IDS_ABOUTBOX            "&About 3dmodeling..."
 END
 
-#endif    // English (U.S.) resources
+#endif    // 英语(美国) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
