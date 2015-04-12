@@ -26,6 +26,12 @@ public:
 		INPUT_UNAVAILABLECHARACTER,
 		INPUT_NOTMATCH
 	};
+public:
+	struct RGB{
+		unsigned char R;
+		unsigned char G;
+		unsigned char B;
+	};
 
 // Implementation
 protected:
@@ -46,12 +52,23 @@ private:
 	void ShowFormatColors();
 	int FormatRawColors(CString strinput);
 private:
+	int WritePCDFile(CString strfile);
+	
+private:
 	bool m_bformat;
-	unsigned char * m_colors;
+	union{
+		unsigned char * m_colors;
+		struct RGB * m_rgb; 
+	}m_bytes;
+	
+	int m_bytecapacity;
 	int m_bytecount;
+	int m_pointcount;
 	std::map<std::string, unsigned char>m_str2byte;
 	
 	CString m_strrawinput;
+private:
+	CString m_strexe;
 public:
 	CStatic m_tips;
 	afx_msg void OnBnClickedButtonGenerate();

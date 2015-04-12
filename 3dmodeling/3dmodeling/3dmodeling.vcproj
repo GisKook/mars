@@ -68,7 +68,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="assimp.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../assimp/"
 				GenerateDebugInformation="true"
