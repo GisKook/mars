@@ -356,8 +356,8 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 		system(vtk2objcmd);
 
 		m_tips.SetWindowText("obj file generate successfully.");
-	//	remove(pcdpath);
-		//remove(vtkpath);
+		remove(pcdpath);
+		remove(vtkpath);
 	}
 }
 
