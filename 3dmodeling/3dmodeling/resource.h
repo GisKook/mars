@@ -14,6 +14,9 @@
 #define IDC_BUTTON_FILEPATH2            1004
 #define IDC_BUTTON_FORMAT               1004
 #define IDC_STATIC_TIPS                 1005
+#define IDC_EDIT_MNN                    1006
+#define IDC_EDIT_MNN2                   1007
+#define IDC_EDIT_MD                     1007
 
 // Next default values for new objects
 // 

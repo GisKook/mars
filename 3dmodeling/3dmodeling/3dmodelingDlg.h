@@ -53,6 +53,7 @@ private:
 	int FormatRawColors(CString strinput);
 private:
 	int WritePCDFile(CString strfile);
+	int WriteOBJFile(CString strfile);
 	
 private:
 	bool m_bformat;
@@ -74,4 +75,6 @@ public:
 	afx_msg void OnBnClickedButtonGenerate();
 	afx_msg void OnBnClickedButtonFilepath();
 	CEdit m_outputfilepath;
+	CEdit m_mnn;
+	CEdit m_md;
 };
