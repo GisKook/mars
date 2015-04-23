@@ -267,10 +267,10 @@ int CMy3dmodelingDlg::FillBytes( CString strinput )
 	m_pointcount = bytecount/3;
 	m_bytecount = m_pointcount* 3;
 
-	for (int i = 0,j = 0;  i < m_bytecount; i+=2,j++)
+	for (int i = 0,j = 0, k = 0;  i < m_bytecount; i++,j++,k+=2)
 	{ 
-		hex[0] = strinput[i];
-		hex[1] = strinput[i+1];
+		hex[0] = strinput[k];
+		hex[1] = strinput[k+1];
 		if(hex[0] >= 'a' && hex[0] <='z'){
 			hex[0] -= 'z' - 'Z';
 		}
@@ -451,9 +451,9 @@ int CMy3dmodelingDlg::WriteOBJFile( CString strfile )
 	fwrite(bufferleft, sizeof(char), sizeof(bufferleft)-1, objfile);
 	
 	char bufferpoints[64];
-	for(int i = 0; i < m_pointcount; ++i){ 
+	for(int i = 0, j = 0; i < m_pointcount; ++i,j+=3){ 
 		memset(bufferpoints, 0, 64);
-		sprintf(bufferpoints, "v %d %d %d\n", m_bytes.m_colors[i], m_bytes.m_colors[i+1], m_bytes.m_colors[i+2]);
+		sprintf(bufferpoints, "v %d %d %d\n", m_bytes.m_colors[j], m_bytes.m_colors[j+1], m_bytes.m_colors[j+2]);
 		fwrite(bufferpoints, sizeof(char), strlen(bufferpoints), objfile);
 	}
 	fflush(objfile);

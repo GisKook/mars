@@ -4,3 +4,4 @@ version 0.4 : Generate obj file(only points).Exposed user set paramters interfac
 version 0.5 : recompile version 0.4(2015-4-17)
 version 0.6 : modify the allways the same bug(2015-4-23)
 version 0.7 : add more paramters(2015-4-23)
+version 0.8 : modify the allways the same bug(2015-4-23)
