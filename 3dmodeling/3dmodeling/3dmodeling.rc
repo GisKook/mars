@@ -89,36 +89,48 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOGEX 0, 0, 170, 62
+IDD_ABOUTBOX DIALOGEX 0, 0, 214, 158
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "About 3dmodeling"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
-    LTEXT           "3dmodeling, Version 1.0",IDC_STATIC,42,14,114,8,SS_NOPREFIX
-    LTEXT           "Copyright (C) 2015",IDC_STATIC,42,26,114,8
-    DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
+    LTEXT           "3dmodeling, Version 0.7",IDC_STATIC,11,8,82,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2015",IDC_STATIC,126,8,65,8
+    DEFPUSHBUTTON   "OK",IDOK,157,137,50,14,WS_GROUP
+    LTEXT           "*MaximumNearestNeighbors : The maximum number of nearest neighbors to be searched for.  ",IDC_STATIC,7,28,200,20,SS_NOPREFIX
+    LTEXT           "*MaximumSurfaceAngle : Don't consider points for triangulation if their normal deviates more than this value from the query point's normal.",IDC_STATIC,7,56,200,20,SS_NOPREFIX
+    LTEXT           "*MaximumAngle : The maximum angle each triangle can have.(its value should be around 120 degrees)",IDC_STATIC,7,112,200,20,SS_NOPREFIX
+    LTEXT           "*MinimumAngle : The minimum angle each triangle should have.  ",IDC_STATIC,7,84,200,20,SS_NOPREFIX
 END
 
-IDD_MY3DMODELING_DIALOG DIALOGEX 0, 0, 356, 322
+IDD_MY3DMODELING_DIALOG DIALOGEX 0, 0, 356, 338
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "3dmodeling"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    PUSHBUTTON      "Close",IDCANCEL,299,294,50,14
+    PUSHBUTTON      "Close",IDCANCEL,299,312,50,14
     EDITTEXT        IDC_EDIT_INPUT,7,18,342,184,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN
     GROUPBOX        "Input colors",IDC_STATIC,7,7,342,196
     PUSHBUTTON      "Browsing...",IDC_BUTTON_FILEPATH,299,237,50,14
     EDITTEXT        IDC_EDIT_FILEPATH,7,237,273,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "Generate",IDC_BUTTON_GENERATE,299,269,50,14
-    LTEXT           "",IDC_STATIC_TIPS,7,310,342,8
+    PUSHBUTTON      "Generate",IDC_BUTTON_GENERATE,299,287,50,14
+    LTEXT           "",IDC_STATIC_TIPS,7,326,342,8
     PUSHBUTTON      "Format",IDC_BUTTON_FORMAT,299,209,50,14
     LTEXT           "OBJ File path:",IDC_STATIC,7,225,66,8
     LTEXT           "Maximum Nearest Neighbors:",IDC_STATIC,7,264,94,8
-    LTEXT           "Maximum Distance:",IDC_STATIC,7,291,67,8
-    EDITTEXT        IDC_EDIT_MNN,111,264,62,14,ES_AUTOHSCROLL | ES_NUMBER
-    EDITTEXT        IDC_EDIT_MD,111,291,62,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Maximum Distance:",IDC_STATIC,7,286,67,8
+    EDITTEXT        IDC_EDIT_MNN,107,264,41,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_MD,107,286,41,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "MaximumSurfaceAngle:",IDC_STATIC,7,310,76,8
+    LTEXT           "MaximumAngle:",IDC_STATIC,166,264,51,8
+    LTEXT           "MinimumAngle:",IDC_STATIC,166,286,48,8
+    EDITTEXT        IDC_EDIT_MSA,107,310,41,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_MAXA,229,263,41,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_EDIT_MINA,229,285,41,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Degree",IDC_STATIC,155,310,22,8
+    LTEXT           "Degree",IDC_STATIC,273,264,29,8
+    LTEXT           "Degree",IDC_STATIC,273,286,25,9
 END
 
 
@@ -172,9 +184,9 @@ BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 163
+        RIGHTMARGIN, 207
         TOPMARGIN, 7
-        BOTTOMMARGIN, 55
+        BOTTOMMARGIN, 151
     END
 
     IDD_MY3DMODELING_DIALOG, DIALOG
@@ -182,7 +194,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 349
         TOPMARGIN, 7
-        BOTTOMMARGIN, 318
+        BOTTOMMARGIN, 334
     END
 END
 #endif    // APSTUDIO_INVOKED

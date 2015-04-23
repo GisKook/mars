@@ -2,3 +2,5 @@ version 0.2 : The dialog is done.SW can check the input hexs.Set the 3d model fi
 version 0.3 : Generate pcd file,which convert hex to decimal.Generate obj file with default paramters.
 version 0.4 : Generate obj file(only points).Exposed user set paramters interface
 version 0.5 : recompile version 0.4(2015-4-17)
+version 0.6 : modify the allways the same bug(2015-4-23)
+version 0.7 : add more paramters(2015-4-23)

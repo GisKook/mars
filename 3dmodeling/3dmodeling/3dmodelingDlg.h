@@ -77,4 +77,7 @@ public:
 	CEdit m_outputfilepath;
 	CEdit m_mnn;
 	CEdit m_md;
+	CEdit m_msa;
+	CEdit m_maxa;
+	CEdit m_mina;
 };

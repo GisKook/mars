@@ -64,6 +64,9 @@ void CMy3dmodelingDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_FILEPATH, m_outputfilepath);
 	DDX_Control(pDX, IDC_EDIT_MNN, m_mnn);
 	DDX_Control(pDX, IDC_EDIT_MD, m_md);
+	DDX_Control(pDX, IDC_EDIT_MSA, m_msa);
+	DDX_Control(pDX, IDC_EDIT_MAXA, m_maxa);
+	DDX_Control(pDX, IDC_EDIT_MINA, m_mina);
 }
 
 BEGIN_MESSAGE_MAP(CMy3dmodelingDlg, CDialog)
@@ -133,6 +136,10 @@ BOOL CMy3dmodelingDlg::OnInitDialog()
 	m_strexe = exefile;
 	m_mnn.SetWindowText("100");
 	m_md.SetWindowText("100");
+
+	m_msa.SetWindowText("45");
+	m_maxa.SetWindowText("120");
+	m_mina.SetWindowText("10");
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -255,9 +262,11 @@ int CMy3dmodelingDlg::FillBytes( CString strinput )
 		free(m_bytes.m_colors);
 		m_bytes.m_colors = (unsigned char *)malloc(bytecount);
 		m_bytecapacity = bytecount;
-		m_pointcount = m_bytecapacity/3;
-		m_bytecount = m_pointcount * 3;
 	}
+
+	m_pointcount = bytecount/3;
+	m_bytecount = m_pointcount* 3;
+
 	for (int i = 0,j = 0;  i < m_bytecount; i+=2,j++)
 	{ 
 		hex[0] = strinput[i];
@@ -313,6 +322,9 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 	CString strfile;
 	m_outputfilepath.GetWindowText(strfile);
 	if (!strfile.IsEmpty()) {
+		if(!m_bformat){
+			OnBnClickedButtonFormat();
+		}
 		CString strmnn, strmd;
 		m_mnn.GetWindowText(strmnn);
 		m_md.GetWindowText(strmd);
@@ -337,6 +349,13 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 		WritePCDFile(pcdpath);
 		m_tips.SetWindowText("pcd file generate successfully.");
 
+		CString strmsa, strmaxa, strmina;
+		m_msa.GetWindowText(strmsa);
+		m_maxa.GetWindowText(strmaxa);
+		m_mina.GetWindowText(strmina);
+		if(strmsa.IsEmpty()){strmsa = "45";};
+		if(strmaxa.IsEmpty()){strmaxa = "120";};
+		if(strmina.IsEmpty()){strmina = "10";}; 
 		char vtkpath[256] = {0};
 		memcpy(vtkpath, strfile.GetBuffer(), count);
 		vtkpath[count] = '.'; vtkpath[count+1] = 'v'; vtkpath[count+2] = 't'; vtkpath[count+3] = 'k';
@@ -346,7 +365,7 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 		char pcd2vtk[256] = {0};
 		count = m_strexe.ReverseFind('\\');
 		memcpy(pcd2vtk, m_strexe.GetBuffer(),count);
-		CString pcd2vtkcmd = pcd2vtk+CString("\\pcd2vtk.exe ") + strmd + CString(" 50 ") + strmnn+" "+pcdpath + " " + vtkpath;
+		CString pcd2vtkcmd = pcd2vtk+CString("\\pcd2vtk.exe ") + strmd + CString(" 50 ") + strmnn+" "+pcdpath + " " + vtkpath + " " + strmsa + " " + strmaxa + " " + strmina;
 		system(pcd2vtkcmd.GetBuffer());
 		m_tips.SetWindowText("vtk file generate successfully.");
 
@@ -358,6 +377,10 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 		m_tips.SetWindowText("obj file generate successfully.");
 		remove(pcdpath);
 		remove(vtkpath);
+		m_pointcount = 0;
+		memset(m_bytes.m_colors, 0, m_bytecapacity);
+
+		m_bformat = false;
 	}
 }
 
@@ -435,6 +458,7 @@ int CMy3dmodelingDlg::WriteOBJFile( CString strfile )
 	}
 	fflush(objfile);
 	fclose(objfile);
+	
 
 	return 0;
 }
