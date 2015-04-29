@@ -375,7 +375,7 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 		system(vtk2objcmd);
 
 		m_tips.SetWindowText("obj file generate successfully.");
-		remove(pcdpath);
+	//	remove(pcdpath);
 		remove(vtkpath);
 		m_pointcount = 0;
 		memset(m_bytes.m_colors, 0, m_bytecapacity);
@@ -419,9 +419,9 @@ int CMy3dmodelingDlg::WritePCDFile( CString strfile )
 	fwrite(bufferdata, sizeof(char), sizeof(bufferdata)-1, pcdfile);
 
 	char bufferpoints[64];
-	for(int i = 0; i < m_pointcount; ++i){ 
+	for(int i = 0, j = 0; i < m_pointcount; ++i, j+=3){ 
 		memset(bufferpoints, 0, 64);
-		sprintf(bufferpoints, "%d %d %d\n", m_bytes.m_colors[i], m_bytes.m_colors[i+1], m_bytes.m_colors[i+2]);
+		sprintf(bufferpoints, "%d %d %d\n", m_bytes.m_colors[j], m_bytes.m_colors[j+1], m_bytes.m_colors[j+2]);
 		fwrite(bufferpoints, sizeof(char), strlen(bufferpoints), pcdfile);
 	}
 	fflush(pcdfile);

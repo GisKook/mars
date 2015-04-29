@@ -94,7 +94,7 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSM
 CAPTION "About 3dmodeling"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    LTEXT           "3dmodeling, Version 0.7",IDC_STATIC,11,8,82,8,SS_NOPREFIX
+    LTEXT           "3dmodeling, Version 0.9",IDC_STATIC,11,8,82,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2015",IDC_STATIC,126,8,65,8
     DEFPUSHBUTTON   "OK",IDOK,157,137,50,14,WS_GROUP
     LTEXT           "*MaximumNearestNeighbors : The maximum number of nearest neighbors to be searched for.  ",IDC_STATIC,7,28,200,20,SS_NOPREFIX
