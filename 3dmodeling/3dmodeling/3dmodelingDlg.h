@@ -54,6 +54,7 @@ private:
 private:
 	int WritePCDFile(CString strfile);
 	int WriteOBJFile(CString strfile);
+	int ShowRawPoints();
 	
 private:
 	bool m_bformat;
@@ -80,4 +81,5 @@ public:
 	CEdit m_msa;
 	CEdit m_maxa;
 	CEdit m_mina;
+	CEdit m_output;
 };

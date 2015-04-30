@@ -18,8 +18,9 @@
 #define IDC_EDIT_MD                     1007
 #define IDC_EDIT_MSA                    1008
 #define IDC_EDIT_MAXA                   1009
-#define IDC_EDIT_MAXA2                  1010
 #define IDC_EDIT_MINA                   1010
+#define IDC_EDIT_INPUT2                 1011
+#define IDC_EDIT_OUTPUT                 1011
 
 // Next default values for new objects
 // 

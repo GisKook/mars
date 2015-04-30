@@ -67,6 +67,7 @@ void CMy3dmodelingDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_MSA, m_msa);
 	DDX_Control(pDX, IDC_EDIT_MAXA, m_maxa);
 	DDX_Control(pDX, IDC_EDIT_MINA, m_mina);
+	DDX_Control(pDX, IDC_EDIT_OUTPUT, m_output);
 }
 
 BEGIN_MESSAGE_MAP(CMy3dmodelingDlg, CDialog)
@@ -343,6 +344,8 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 		WriteOBJFile(opobjpath);
 		m_tips.SetWindowText("obj file (only points) generate successfully.");
 
+		ShowRawPoints();
+
 		char pcdpath[256] = {0};
 		memcpy(pcdpath, strfile.GetBuffer(), count);
 		pcdpath[count] = '.'; pcdpath[count+1] = 'p'; pcdpath[count+2] = 'c'; pcdpath[count+3] = 'd';
@@ -375,7 +378,7 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 		system(vtk2objcmd);
 
 		m_tips.SetWindowText("obj file generate successfully.");
-	//	remove(pcdpath);
+		remove(pcdpath);
 		remove(vtkpath);
 		m_pointcount = 0;
 		memset(m_bytes.m_colors, 0, m_bytecapacity);
@@ -459,6 +462,20 @@ int CMy3dmodelingDlg::WriteOBJFile( CString strfile )
 	fflush(objfile);
 	fclose(objfile);
 	
+
+	return 0;
+}
+
+int CMy3dmodelingDlg::ShowRawPoints()
+{
+	CString rawpoints;
+	char bufferpoints[64];
+	for(int i = 0, j = 0; i < m_pointcount; ++i, j+=3){ 
+		memset(bufferpoints, 0, 64);
+		sprintf(bufferpoints, "%d %d %d\r\n", m_bytes.m_colors[j], m_bytes.m_colors[j+1], m_bytes.m_colors[j+2]);
+		rawpoints+=bufferpoints;
+	}
+	m_output.SetWindowText(rawpoints);
 
 	return 0;
 }
