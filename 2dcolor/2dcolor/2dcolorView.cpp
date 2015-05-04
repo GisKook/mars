@@ -23,6 +23,8 @@ BEGIN_MESSAGE_MAP(CMy2dcolorView, CView)
 	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
 	ON_WM_LBUTTONDOWN()
+	ON_WM_LBUTTONDBLCLK()
+	ON_WM_LBUTTONUP()
 END_MESSAGE_MAP()
 
 // CMy2dcolorView construction/destruction
@@ -36,9 +38,50 @@ CMy2dcolorView::CMy2dcolorView()
 	m_rectbox.right = offsetx+1000;
 	m_rectbox.top = offsety+1000;
 	m_rectbox.bottom = offsety; 
+
 	memcpy(&m_rectcyan, &m_rectbox, sizeof(RECT));
-	
 	m_rectcyan.top = 660+offsety;
+
+	m_rectcyan1.left = offsetx;
+	m_rectcyan1.right = offsetx + (m_rectbox.right-m_rectbox.left)/3;
+	m_rectcyan1.top = offsety + 780;
+	m_rectcyan1.bottom = offsety;
+
+	m_rectcyan2.left = m_rectcyan1.right-1;
+	m_rectcyan2.right = m_rectcyan2.left+ (m_rectbox.right - m_rectbox.left)/3;
+	m_rectcyan2.top = offsety + 290;
+	m_rectcyan2.bottom = offsety;
+
+	m_rectcyan3.left = m_rectcyan2.right-2;
+	m_rectcyan3.right = m_rectbox.right;
+	m_rectcyan3.top = offsety + 430;
+	m_rectcyan3.bottom = offsety;
+
+	int temp = (m_rectbox.right - m_rectbox.left)/5;
+	m_rectyellow.left = offsetx;
+	m_rectyellow.right = m_rectyellow.left + temp;
+	m_rectyellow.bottom = offsety;
+	m_rectyellow.top = offsety+660;
+	
+	m_rectMagenta.left = m_rectyellow.right-2;
+	m_rectMagenta.right = m_rectMagenta.left + temp;
+	m_rectMagenta.bottom = offsety;
+	m_rectMagenta.top = offsety+330;
+
+	m_rectGray.left = m_rectMagenta.right -2;
+	m_rectGray.right = m_rectGray.left + temp;
+	m_rectGray.bottom = offsety;
+	m_rectGray.top = offsety+250;
+
+	m_rectGreen.left = m_rectGray.right - 2;
+	m_rectGreen.right = m_rectGreen.left + temp;
+	m_rectGreen.bottom = offsety;
+	m_rectGreen.top = offsety+750;
+
+	m_rectPurple.left = m_rectGreen.right - 2;
+	m_rectPurple.right = m_rectbox.right;
+	m_rectPurple.bottom = offsety;
+	m_rectPurple.top = offsety + 500;
 	
 	m_action = 0;
 }
@@ -73,19 +116,35 @@ void CMy2dcolorView::OnDraw(CDC* pDC)
 
 	memcpy(&m_rectboxW, &m_rectbox, sizeof(m_rectboxW));
 	memcpy(&m_rectcyanW, &m_rectcyan, sizeof(m_rectcyanW));
+	memcpy(&m_rectPurpleW, &m_rectPurple, sizeof(m_rectPurple));
 	pDC->LPtoDP(&m_rectcyanW);
 	pDC->LPtoDP(&m_rectboxW);
+	pDC->LPtoDP(&m_rectPurpleW);
 	m_rectboxW.top += rect.bottom;
 	m_rectboxW.bottom += rect.bottom;
 	m_rectcyanW.top += rect.bottom;
 	m_rectcyanW.bottom += rect.bottom;
+	m_rectPurpleW.top += rect.bottom;
+	m_rectPurpleW.bottom += rect.bottom;
 	pDC->SetViewportOrg(0, rect.bottom);
 	switch(m_action){
 		case 0:
-			DrawRect(pDC, m_rectcyan, RGB(0,255,255));
+			DrawRect(pDC, m_rectcyan, RGB(0,172,236));
 			DrawRectBox(pDC,m_rectbox);
 			break;
 		case 1:
+			DrawRect(pDC, m_rectcyan1, RGB(204,238,251));
+			DrawRect(pDC, m_rectcyan2, RGB(178,230,249));
+			DrawRect(pDC, m_rectcyan3, RGB(153,222,247));
+			DrawRectBox(pDC,m_rectbox);
+			break;
+		case 2:
+			DrawRect(pDC, m_rectyellow, RGB(255,248,148));
+			DrawRect(pDC, m_rectMagenta, RGB(228,134,195));
+			DrawRect(pDC, m_rectGray, RGB(168,168,168));
+			DrawRect(pDC, m_rectGreen, RGB(139,191,79));
+			DrawRect(pDC, m_rectPurple, RGB(116,115,177));
+			DrawRectBox(pDC,m_rectbox);
 			break;
 		default:
 			break;
@@ -219,10 +278,27 @@ void CMy2dcolorView::OnLButtonDown(UINT nFlags, CPoint point)
 	if (point.x >= m_rectcyanW.left && point.x <= m_rectcyanW.right && point.y >= m_rectcyanW.top && point.y <= m_rectcyanW.bottom)
 	{
 		m_action = 1;
-		printf("in\n");
-	}else{
-		printf("out\n");
+		printf("click\n");
+		::InvalidateRect(this->GetSafeHwnd(), NULL, true);
 	}
 
 	CView::OnLButtonDown(nFlags, point);
+}
+
+void CMy2dcolorView::OnLButtonDblClk(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+	if (m_action == 0 && point.x >= m_rectcyanW.left && point.x <= m_rectcyanW.right && point.y >= m_rectcyanW.top && point.y <= m_rectcyanW.bottom)
+	{
+		m_action = 2;
+		printf("dclick\n");
+	}
+	CView::OnLButtonDblClk(nFlags, point);
+}
+
+void CMy2dcolorView::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+	m_action = 0;
+	CView::OnLButtonUp(nFlags, point);
 }

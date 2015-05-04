@@ -44,11 +44,15 @@ protected:
 	RECT m_rectcyanW;
 	
 	RECT m_rectcyan1;
-	RECT m_rectcyan1W;
 	RECT m_rectcyan2;
-	RECT m_rectcyan2W;
 	RECT m_rectcyan3;
-	RECT m_rectcyan3W;
+
+	RECT m_rectyellow;
+	RECT m_rectMagenta;
+	RECT m_rectGray;
+	RECT m_rectGreen;
+	RECT m_rectPurple;
+	RECT m_rectPurpleW;
 private:
 	int m_action;
 protected:
@@ -58,6 +62,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // debug version in 2dcolorView.cpp
