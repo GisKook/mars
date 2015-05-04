@@ -99,6 +99,14 @@ const char* g_byteliterals[] = {"00","01","02","03","04","05","06","07","08","09
                                 "D0","D1","D2","D3","D4","D5","D6","D7","D8","D9","DA","DB","DC","DD","DE","DF",
                                 "E0","E1","E2","E3","E4","E5","E6","E7","E8","E9","EA","EB","EC","ED","EE","EF",
                                 "F0","F1","F2","F3","F4","F5","F6","F7","F8","F9","FA","FB","FC","FD","FE","FF"};
+const char g_asciitable[] = {'|', '|', '|', '|', '|', '|', '|', '|', '|', '|', '\n', '|', '|', '\r', '|', '|', '|',
+							 '|', '|', '|', '|', '|', '|', '|', '|', '|', '|', '|', '|', '|', '|', '|',' ', '!',
+							 '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2',
+							 '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'A', 'B', 'C',
+							 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+							 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e',
+							 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+							 'w', 'x', 'y', 'z', '{', '|', '}', '~', '|'};
 
 BOOL CMy3dmodelingDlg::OnInitDialog()
 {
@@ -131,7 +139,10 @@ BOOL CMy3dmodelingDlg::OnInitDialog()
 	{
 		m_str2byte[g_byteliterals[i]] = i;
 	}
-	 HMODULE hModule = GetModuleHandle(NULL);
+	for(int i = 0; i <= 128; ++i){
+		m_charater2dec[g_asciitable[i]] = i;
+	}
+	HMODULE hModule = GetModuleHandle(NULL);
 	char exefile[256] = {0};
 	GetModuleFileName(hModule, exefile, 256);
 	m_strexe = exefile;
@@ -198,28 +209,32 @@ HCURSOR CMy3dmodelingDlg::OnQueryDragIcon()
 void CMy3dmodelingDlg::OnBnClickedButtonFormat()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	CString strinput; 
+//	CString strinput; 
+//	m_input.GetWindowText(strinput);
+//	int inputstatus = IsIllegal(strinput);
+//	switch(inputstatus){
+//		case INPUT_UNAVAILABLECHARACTER:
+//			m_bformat = false;
+//			m_tips.SetWindowText("There are illegal characters in your input.Please check it.");
+//			break;
+//		case INPUT_NOTMATCH:
+//			m_bformat = false;
+//			m_tips.SetWindowText("It is not complete inputs.Please check it.");
+//			break;
+//		case INPUT_OK:
+//			m_bformat = true;
+//			FormatRawColors(strinput);
+//			ShowFormatColors();
+//			FillBytes(m_strrawinput);
+//			m_tips.SetWindowText("");
+//			break;
+//		default:
+//			break;
+//	}
+	CString strinput;
 	m_input.GetWindowText(strinput);
-	int inputstatus = IsIllegal(strinput);
-	switch(inputstatus){
-		case INPUT_UNAVAILABLECHARACTER:
-			m_bformat = false;
-			m_tips.SetWindowText("There are illegal characters in your input.Please check it.");
-			break;
-		case INPUT_NOTMATCH:
-			m_bformat = false;
-			m_tips.SetWindowText("It is not complete inputs.Please check it.");
-			break;
-		case INPUT_OK:
-			m_bformat = true;
-			FormatRawColors(strinput);
-			ShowFormatColors();
-			FillBytes(m_strrawinput);
-			m_tips.SetWindowText("");
-			break;
-		default:
-			break;
-	}
+	ConvertToColors(strinput);
+	ShowColors();
 }
 
 int CMy3dmodelingDlg::IsIllegal( CString strinput)
@@ -248,7 +263,6 @@ int CMy3dmodelingDlg::IsIllegal( CString strinput)
 	}
 
 	return INPUT_OK;
-
 }
 
 int CMy3dmodelingDlg::FillBytes( CString strinput )
@@ -320,6 +334,7 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	//m_tips.SetWindowText("That is the key issue!!!");
+#if 0
 	CString strfile;
 	m_outputfilepath.GetWindowText(strfile);
 	if (!strfile.IsEmpty()) {
@@ -385,6 +400,8 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 
 		m_bformat = false;
 	}
+#endif
+
 }
 
 void CMy3dmodelingDlg::OnBnClickedButtonFilepath()
@@ -478,4 +495,36 @@ int CMy3dmodelingDlg::ShowRawPoints()
 	m_output.SetWindowText(rawpoints);
 
 	return 0;
+}
+
+int CMy3dmodelingDlg::ConvertToColors( CString strinput )
+{ 
+	int bytecount = strinput.GetLength();
+	if (m_bytecapacity < bytecount)
+	{
+		free(m_bytes.m_colors);
+		m_bytes.m_colors = (unsigned char *)malloc(bytecount);
+		m_bytecapacity = bytecount;
+	}
+
+	m_pointcount = bytecount/3;
+	m_bytecount = m_pointcount* 3;
+
+	for (int i = 0;  i < m_bytecount; i++){
+		m_bytes.m_colors[i] = m_charater2dec[strinput.GetAt(i)];
+	}
+
+	return 0;
+}
+
+void CMy3dmodelingDlg::ShowColors()
+{ 
+	CString rawcolors;
+	char buffercolors[64];
+	for(int i = 0, j = 0; i < m_pointcount; ++i, j+=3){ 
+		memset(buffercolors, 0, 64);
+		sprintf(buffercolors, "%d %d %d\r\n", m_bytes.m_colors[j], m_bytes.m_colors[j+1], m_bytes.m_colors[j+2]);
+		rawcolors+=buffercolors;
+	}
+	m_output.SetWindowText(rawcolors);
 }

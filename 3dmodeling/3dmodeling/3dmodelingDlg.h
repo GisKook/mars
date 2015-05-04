@@ -55,6 +55,9 @@ private:
 	int WritePCDFile(CString strfile);
 	int WriteOBJFile(CString strfile);
 	int ShowRawPoints();
+private:
+	int ConvertToColors(CString strinput);
+	void ShowColors();
 	
 private:
 	bool m_bformat;
@@ -67,6 +70,7 @@ private:
 	int m_bytecount;
 	int m_pointcount;
 	std::map<std::string, unsigned char>m_str2byte;
+	std::map<char, unsigned char>m_charater2dec;
 	
 	CString m_strrawinput;
 private:
