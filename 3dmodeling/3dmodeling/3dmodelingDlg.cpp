@@ -5,6 +5,7 @@
 #include "3dmodeling.h"
 #include "3dmodelingDlg.h"
 #include <assert.h>
+#include "epswriter.hpp"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -329,7 +330,7 @@ int CMy3dmodelingDlg::FormatRawColors( CString strinput )
 	
 	return 0;
 }
-
+int MyRand(){return rand()%65535;}
 void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 {
 	// TODO: 在此添加控件通知处理程序代码
@@ -401,6 +402,13 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 		m_bformat = false;
 	}
 #endif
+	epswriter s("c:/square.eps", 0, 0, 100, 100);
+	epswriter sF("c:/squareFilled.eps", 200, 200, 400, 400);
+
+	const double leftDownX = -.5, leftDownY=-.5;
+	const double rightUpX = .5, rightUpY = .5;
+	s.square(leftDownX, leftDownY, rightUpX, rightUpY,MyRand(),MyRand(),MyRand());
+	sF.filledSquare(leftDownX, leftDownY, rightUpX, rightUpY,MyRand(),MyRand(),MyRand());
 
 }
 

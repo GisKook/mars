@@ -50,7 +50,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -196,6 +196,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\epswriter.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -215,6 +219,18 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\tester.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -227,6 +243,10 @@
 			</File>
 			<File
 				RelativePath=".\3dmodelingDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\epswriter.hpp"
 				>
 			</File>
 			<File
