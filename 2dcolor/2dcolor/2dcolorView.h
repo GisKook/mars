@@ -53,6 +53,13 @@ protected:
 	RECT m_rectGreen;
 	RECT m_rectPurple;
 	RECT m_rectPurpleW;
+
+	RECT m_rectPurple1;
+	RECT m_rectPurple2;
+	RECT m_rectPurple3;
+
+	RECT m_rectReset;
+	RECT m_rectResetW;
 private:
 	int m_action;
 protected:

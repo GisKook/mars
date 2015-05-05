@@ -62,7 +62,7 @@ CMy2dcolorView::CMy2dcolorView()
 	m_rectyellow.right = m_rectyellow.left + temp;
 	m_rectyellow.bottom = offsety;
 	m_rectyellow.top = offsety+660;
-	
+
 	m_rectMagenta.left = m_rectyellow.right-2;
 	m_rectMagenta.right = m_rectMagenta.left + temp;
 	m_rectMagenta.bottom = offsety;
@@ -82,7 +82,19 @@ CMy2dcolorView::CMy2dcolorView()
 	m_rectPurple.right = m_rectbox.right;
 	m_rectPurple.bottom = offsety;
 	m_rectPurple.top = offsety + 500;
-	
+
+	memcpy(&m_rectPurple1, &m_rectcyan1, sizeof(RECT));
+	memcpy(&m_rectPurple2, &m_rectcyan2, sizeof(RECT));
+	memcpy(&m_rectPurple3, &m_rectcyan3, sizeof(RECT));
+	m_rectPurple1.top = offsety + 580;
+	m_rectPurple2.top = offsety + 230;
+	m_rectPurple3.top = offsety + 780;
+
+	m_rectReset.left = offsetx + 1100;
+	m_rectReset.right = m_rectReset.left + 100;
+	m_rectReset.bottom = offsety;
+	m_rectReset.top = offsety + 100;
+
 	m_action = 0;
 }
 
@@ -117,26 +129,33 @@ void CMy2dcolorView::OnDraw(CDC* pDC)
 	memcpy(&m_rectboxW, &m_rectbox, sizeof(m_rectboxW));
 	memcpy(&m_rectcyanW, &m_rectcyan, sizeof(m_rectcyanW));
 	memcpy(&m_rectPurpleW, &m_rectPurple, sizeof(m_rectPurple));
+	memcpy(&m_rectResetW, &m_rectReset, sizeof(m_rectPurple));
 	pDC->LPtoDP(&m_rectcyanW);
 	pDC->LPtoDP(&m_rectboxW);
 	pDC->LPtoDP(&m_rectPurpleW);
+	pDC->LPtoDP(&m_rectResetW);
+	
 	m_rectboxW.top += rect.bottom;
 	m_rectboxW.bottom += rect.bottom;
 	m_rectcyanW.top += rect.bottom;
 	m_rectcyanW.bottom += rect.bottom;
 	m_rectPurpleW.top += rect.bottom;
 	m_rectPurpleW.bottom += rect.bottom;
+	m_rectResetW.top += rect.bottom;
+	m_rectResetW.bottom += rect.bottom;
 	pDC->SetViewportOrg(0, rect.bottom);
 	switch(m_action){
 		case 0:
 			DrawRect(pDC, m_rectcyan, RGB(0,172,236));
 			DrawRectBox(pDC,m_rectbox);
+			DrawRect(pDC, m_rectReset, RGB(0,172,236));
 			break;
 		case 1:
 			DrawRect(pDC, m_rectcyan1, RGB(204,238,251));
 			DrawRect(pDC, m_rectcyan2, RGB(178,230,249));
 			DrawRect(pDC, m_rectcyan3, RGB(153,222,247));
 			DrawRectBox(pDC,m_rectbox);
+			DrawRect(pDC, m_rectReset, RGB(0,172,236));
 			break;
 		case 2:
 			DrawRect(pDC, m_rectyellow, RGB(255,248,148));
@@ -145,6 +164,14 @@ void CMy2dcolorView::OnDraw(CDC* pDC)
 			DrawRect(pDC, m_rectGreen, RGB(139,191,79));
 			DrawRect(pDC, m_rectPurple, RGB(116,115,177));
 			DrawRectBox(pDC,m_rectbox);
+			DrawRect(pDC, m_rectReset, RGB(0,172,236));
+			break;
+		case 3:
+			DrawRect(pDC, m_rectPurple1, RGB(222,223,239));
+			DrawRect(pDC, m_rectPurple2, RGB(206,203,231));
+			DrawRect(pDC, m_rectPurple3, RGB(189,186,222));
+			DrawRectBox(pDC,m_rectbox);
+			DrawRect(pDC, m_rectReset, RGB(0,172,236));
 			break;
 		default:
 			break;
@@ -214,9 +241,9 @@ void CMy2dcolorView::DrawRectBox( CDC *pDC, RECT rect)
 	pts[3].y = rect.top;
 	pts[4].x = pts[0].x;
 	pts[4].y = pts[0].y;
-	
+
 	pDC->Polyline(pts, 5);
-	
+
 	rectex.left = 0;
 	rectex.right = 1;
 	rectex.top = 1;
@@ -255,7 +282,7 @@ void CMy2dcolorView::DrawRect( CDC *pDC, RECT rect, COLORREF color )
 	CPen * oldpen;
 	pen.CreatePen(PS_NULL,0,RGB(0,0,0));
 	oldpen = pDC->SelectObject(&pen);
-	
+
 	CBrush brush;
 	CBrush *oldbrush;
 	brush.CreateSolidBrush(color);
@@ -263,7 +290,7 @@ void CMy2dcolorView::DrawRect( CDC *pDC, RECT rect, COLORREF color )
 	pDC->Rectangle(&rect);
 	pDC->SelectObject(oldpen);
 	pDC->SelectObject(oldbrush);
-	
+
 }
 
 
@@ -275,13 +302,39 @@ void CMy2dcolorView::DrawRect( CDC *pDC, RECT rect, COLORREF color )
 void CMy2dcolorView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 
-	if (point.x >= m_rectcyanW.left && point.x <= m_rectcyanW.right && point.y >= m_rectcyanW.top && point.y <= m_rectcyanW.bottom)
+	if (m_action == 0 && point.x >= m_rectcyanW.left && point.x <= m_rectcyanW.right && point.y >= m_rectcyanW.top && point.y <= m_rectcyanW.bottom)
 	{
-		m_action = 1;
-		printf("click\n");
-		::InvalidateRect(this->GetSafeHwnd(), NULL, true);
+		MSG message;
+		int dbclktime = GetDoubleClickTime();
+		DWORD st = GetTickCount();
+		while(1)
+		{
+			if(::PeekMessage(&message, NULL, 0 ,0 , PM_REMOVE))
+			{
+				::TranslateMessage(&message);
+				::DispatchMessage(&message);
+				if(message.message == WM_LBUTTONDBLCLK)
+					return;
+			}
+			DWORD et = GetTickCount();
+			if(et - st > 200){
+				printf("click\n");
+				m_action = 1;
+				break;
+			}
+			CView::OnLButtonDown(nFlags, point);
+		}
+
+	}
+	if (m_action == 2 && point.x >= m_rectPurpleW.left && point.x <= m_rectPurpleW.right && point.y >= m_rectPurpleW.top && point.y <= m_rectPurpleW.bottom){
+		printf("purple click\n");
+		m_action = 3;
+	}
+	if (point.x >= m_rectResetW.left && point.x <= m_rectResetW.right && point.y >= m_rectResetW.top && point.y <= m_rectResetW.bottom){
+		m_action = 0;
 	}
 
+	::InvalidateRect(this->GetSafeHwnd(), NULL, true);
 	CView::OnLButtonDown(nFlags, point);
 }
 
@@ -291,6 +344,7 @@ void CMy2dcolorView::OnLButtonDblClk(UINT nFlags, CPoint point)
 	if (m_action == 0 && point.x >= m_rectcyanW.left && point.x <= m_rectcyanW.right && point.y >= m_rectcyanW.top && point.y <= m_rectcyanW.bottom)
 	{
 		m_action = 2;
+		::InvalidateRect(this->GetSafeHwnd(), NULL, true);
 		printf("dclick\n");
 	}
 	CView::OnLButtonDblClk(nFlags, point);
@@ -299,6 +353,5 @@ void CMy2dcolorView::OnLButtonDblClk(UINT nFlags, CPoint point)
 void CMy2dcolorView::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	// TODO: Add your message handler code here and/or call default
-	m_action = 0;
 	CView::OnLButtonUp(nFlags, point);
 }
