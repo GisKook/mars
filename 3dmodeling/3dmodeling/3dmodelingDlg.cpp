@@ -5,12 +5,14 @@
 #include "3dmodeling.h"
 #include "3dmodelingDlg.h"
 #include <assert.h>
-#include "epswriter.hpp"
+#include <setjmp.h>
+#include "hpdf.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
+jmp_buf env;
 
 // CAboutDlg dialog used for App About
 
@@ -69,6 +71,9 @@ void CMy3dmodelingDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_MAXA, m_maxa);
 	DDX_Control(pDX, IDC_EDIT_MINA, m_mina);
 	DDX_Control(pDX, IDC_EDIT_OUTPUT, m_output);
+	DDX_Control(pDX, IDC_STATIC_MCOUNT, m_mosaicscount);
+	DDX_Control(pDX, IDC_EDIT_MOSAICSWIDTH, m_mosaicswidth);
+	DDX_Control(pDX, IDC_EDIT_COLUMNSNUMBER, m_columnsnumber);
 }
 
 BEGIN_MESSAGE_MAP(CMy3dmodelingDlg, CDialog)
@@ -330,7 +335,15 @@ int CMy3dmodelingDlg::FormatRawColors( CString strinput )
 	
 	return 0;
 }
-int MyRand(){return rand()%65535;}
+void error_handler  (HPDF_STATUS   error_no,
+                HPDF_STATUS   detail_no,
+                void         *user_data)
+{
+    printf ("ERROR: error_no=%04X, detail_no=%u\n", (HPDF_UINT)error_no,
+                (HPDF_UINT)detail_no);
+    longjmp(env, 1);
+}
+
 void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 {
 	// TODO: 在此添加控件通知处理程序代码
@@ -402,23 +415,79 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 		m_bformat = false;
 	}
 #endif
-	epswriter s("c:/square.eps", 0, 0, 100, 100);
-	epswriter sF("c:/squareFilled.eps", 200, 200, 400, 400);
+	CString strfile;
+	m_outputfilepath.GetWindowText(strfile);
+	CString strmosaicswidth, strcolumnnumber;
+	m_mosaicswidth.GetWindowText(strmosaicswidth);
+	m_columnsnumber.GetWindowText(strcolumnnumber);
+	int moscaicswidth = atoi(strmosaicswidth.GetBuffer());
+	int columnsnumber = atoi(strcolumnnumber.GetBuffer());
+	int rows = 0;
+	if(moscaicswidth == 0){
+		moscaicswidth = 4;
+		m_mosaicswidth.SetWindowText("4");
+	}
+	if(columnsnumber == 0){
+		columnsnumber = 10;
+		m_columnsnumber.SetWindowText("10");
+	}
+	if(m_pointcount % columnsnumber == 0){
+		rows = m_pointcount / columnsnumber;
+	}else{
+		rows = m_pointcount / columnsnumber + 1;
+	}
+	
+	if (!strfile.IsEmpty()) {
+		HPDF_Doc  pdf;
+		HPDF_Page page;
+		HPDF_REAL PAGE_WIDTH = moscaicswidth * columnsnumber;
+		HPDF_REAL PAGE_HEIGHT = moscaicswidth * m_pointcount / columnsnumber;
+		pdf = HPDF_New (error_handler, NULL);
+		if (!pdf) {
+			m_tips.SetWindowText("error: cannot create PdfDoc object\n");
+			return;
+		}
+		if (setjmp(env)) {
+			HPDF_Free (pdf);
+			return;
+		}
+		page = HPDF_AddPage (pdf);
+		HPDF_Page_SetHeight (page, PAGE_HEIGHT);
+		HPDF_Page_SetWidth (page, PAGE_WIDTH);
+		HPDF_Page_GSave (page);
 
-	const double leftDownX = -.5, leftDownY=-.5;
-	const double rightUpX = .5, rightUpY = .5;
-	s.square(leftDownX, leftDownY, rightUpX, rightUpY,MyRand(),MyRand(),MyRand());
-	sF.filledSquare(leftDownX, leftDownY, rightUpX, rightUpY,MyRand(),MyRand(),MyRand());
+		GKRGB rgb;
+
+		for (int i = 0,k = 0; i < rows; ++i)
+		{
+			for (int j = 0; j < columnsnumber;++j)
+			{
+				rgb.R = m_bytes.m_colors[k];
+				rgb.G = m_bytes.m_colors[k+1];
+				rgb.B = m_bytes.m_colors[k+2];
+				DrawMosaics(page,j*moscaicswidth,PAGE_HEIGHT-(i+1)*moscaicswidth, moscaicswidth, moscaicswidth, rgb);
+				k+=3;
+			}
+		}
+		
+	    HPDF_Page_GRestore (page);
+		HPDF_SaveToFile (pdf, strfile.GetBuffer());
+
+		/* clean up */
+		HPDF_Free (pdf);
+	}else{
+		m_tips.SetWindowText("Please chose the pdf file path.");
+	}
 
 }
 
 void CMy3dmodelingDlg::OnBnClickedButtonFilepath()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	TCHAR szFilters[]= _T("OBJ Files (*.obj)|*obj|C4D Files (*.c4d)|*.c4d|All Files (*.*)|*.*||");
-	CFileDialog fileDlg(FALSE, _T(""), _T("untitled.obj"),
+	TCHAR szFilters[]= _T("PDF Files (*.pdf)|*pdf|PDF Files (*.pdf)|*.pdf|All Files (*.*)|*.*||");
+	CFileDialog fileDlg(FALSE, _T(""), _T("untitled.pdf"),
 		OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, szFilters);
-	fileDlg.GetOFN().lpstrTitle = "save 3d modeling file";
+	fileDlg.GetOFN().lpstrTitle = "save pdf file";
 	if(fileDlg.DoModal() == IDOK)
 	{
 		CString strOutFileName = fileDlg.GetPathName();
@@ -535,4 +604,17 @@ void CMy3dmodelingDlg::ShowColors()
 		rawcolors+=buffercolors;
 	}
 	m_output.SetWindowText(rawcolors);
+	char mosaicscount[16] = {0};
+	sprintf(mosaicscount, "%d", m_pointcount);
+	m_mosaicscount.SetWindowText(mosaicscount);
+}
+
+void CMy3dmodelingDlg::DrawMosaics( void * _page, float x, float y, float width, float height, GKRGB rgb )
+{
+	HPDF_Page page = (HPDF_Page)_page;
+	HPDF_Page_SetLineWidth (page, 0.0f);
+	HPDF_Page_SetRGBStroke (page, rgb.R/255.0, rgb.G/255.0, rgb.B/255.0);
+	HPDF_Page_SetRGBFill (page, rgb.R/255.0, rgb.G/255.0, rgb.B/255.0);
+	HPDF_Page_Rectangle(page, x, y, width,height);
+	HPDF_Page_ClosePathFillStroke (page);
 }

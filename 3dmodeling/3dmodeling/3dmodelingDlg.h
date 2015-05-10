@@ -27,7 +27,7 @@ public:
 		INPUT_NOTMATCH
 	};
 public:
-	struct RGB{
+	struct GKRGB{
 		unsigned char R;
 		unsigned char G;
 		unsigned char B;
@@ -58,6 +58,7 @@ private:
 private:
 	int ConvertToColors(CString strinput);
 	void ShowColors();
+	void DrawMosaics(void * page, float x, float y, float width, float height, GKRGB rgb);
 	
 private:
 	bool m_bformat;
@@ -86,4 +87,7 @@ public:
 	CEdit m_maxa;
 	CEdit m_mina;
 	CEdit m_output;
+	CStatic m_mosaicscount;
+	CEdit m_mosaicswidth;
+	CEdit m_columnsnumber;
 };
