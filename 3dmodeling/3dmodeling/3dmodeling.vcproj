@@ -68,7 +68,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="haru.lib"
+				AdditionalDependencies="libhpdf.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="../threepartlib"
 				GenerateDebugInformation="true"
