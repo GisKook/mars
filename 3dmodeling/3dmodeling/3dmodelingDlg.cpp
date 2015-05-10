@@ -472,6 +472,7 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 		
 	    HPDF_Page_GRestore (page);
 		HPDF_SaveToFile (pdf, strfile.GetBuffer());
+		m_tips.SetWindowText("Generate ok.");
 
 		/* clean up */
 		HPDF_Free (pdf);
