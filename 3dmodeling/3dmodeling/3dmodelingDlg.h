@@ -90,4 +90,5 @@ public:
 	CStatic m_mosaicscount;
 	CEdit m_mosaicswidth;
 	CEdit m_columnsnumber;
+	CButton m_ratio;
 };

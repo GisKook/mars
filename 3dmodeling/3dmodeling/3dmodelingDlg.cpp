@@ -74,6 +74,7 @@ void CMy3dmodelingDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_MCOUNT, m_mosaicscount);
 	DDX_Control(pDX, IDC_EDIT_MOSAICSWIDTH, m_mosaicswidth);
 	DDX_Control(pDX, IDC_EDIT_COLUMNSNUMBER, m_columnsnumber);
+	DDX_Control(pDX, IDC_CHECK1, m_ratio);
 }
 
 BEGIN_MESSAGE_MAP(CMy3dmodelingDlg, CDialog)
@@ -587,7 +588,12 @@ int CMy3dmodelingDlg::ConvertToColors( CString strinput )
 	m_bytecount = m_pointcount* 3;
 
 	for (int i = 0;  i < m_bytecount; i++){
-		m_bytes.m_colors[i] = m_charater2dec[strinput.GetAt(i)];
+		if(m_ratio.GetCheck()){
+			m_bytes.m_colors[i] = (m_charater2dec[strinput.GetAt(i)]*255/127);
+		}else{
+			m_bytes.m_colors[i] = m_charater2dec[strinput.GetAt(i)];
+		}
+		
 	}
 
 	return 0;

@@ -16,7 +16,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Chinese (P.R.C.) resources
+// 中文(中华人民共和国) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 #ifdef _WIN32
@@ -71,12 +71,12 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\3dmodeling.ico"
-#endif    // Chinese (P.R.C.) resources
+#endif    // 中文(中华人民共和国) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// 英语(美国) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 #ifdef _WIN32
@@ -118,19 +118,19 @@ BEGIN
     LTEXT           "",IDC_STATIC_TIPS,7,326,342,8
     PUSHBUTTON      "Format",IDC_BUTTON_FORMAT,299,209,50,14
     LTEXT           "PDF File path:",IDC_STATIC,7,225,66,8
-    LTEXT           "Maximum Nearest Neighbors:",IDC_STATIC,111,212,94,8,NOT WS_VISIBLE
-    LTEXT           "Maximum Distance:",IDC_STATIC,111,212,67,8,NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_MNN,111,212,41,14,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_MD,111,212,41,14,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
-    LTEXT           "MaximumSurfaceAngle:",IDC_STATIC,111,212,76,8,NOT WS_VISIBLE
-    LTEXT           "MaximumAngle:",IDC_STATIC,111,212,51,8,NOT WS_VISIBLE
-    LTEXT           "MinimumAngle:",IDC_STATIC,111,212,48,8,NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_MSA,111,212,41,14,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_MAXA,111,212,41,14,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
-    EDITTEXT        IDC_EDIT_MINA,111,212,41,14,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
-    LTEXT           "Degree",IDC_STATIC,111,212,22,8,NOT WS_VISIBLE
-    LTEXT           "Degree",IDC_STATIC,111,212,29,8,NOT WS_VISIBLE
-    LTEXT           "Degree",IDC_STATIC,111,212,25,9,NOT WS_VISIBLE
+    LTEXT           "Maximum Nearest Neighbors:",IDC_STATIC,6,212,94,8,NOT WS_VISIBLE
+    LTEXT           "Maximum Distance:",IDC_STATIC,6,212,67,8,NOT WS_VISIBLE
+    EDITTEXT        IDC_EDIT_MNN,6,212,41,14,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    EDITTEXT        IDC_EDIT_MD,6,212,41,14,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    LTEXT           "MaximumSurfaceAngle:",IDC_STATIC,6,212,76,8,NOT WS_VISIBLE
+    LTEXT           "MaximumAngle:",IDC_STATIC,6,212,51,8,NOT WS_VISIBLE
+    LTEXT           "MinimumAngle:",IDC_STATIC,6,212,48,8,NOT WS_VISIBLE
+    EDITTEXT        IDC_EDIT_MSA,6,212,41,14,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    EDITTEXT        IDC_EDIT_MAXA,6,212,41,14,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    EDITTEXT        IDC_EDIT_MINA,6,212,41,14,ES_AUTOHSCROLL | ES_NUMBER | NOT WS_VISIBLE
+    LTEXT           "Degree",IDC_STATIC,6,212,22,8,NOT WS_VISIBLE
+    LTEXT           "Degree",IDC_STATIC,6,212,29,8,NOT WS_VISIBLE
+    LTEXT           "Degree",IDC_STATIC,6,212,25,9,NOT WS_VISIBLE
     GROUPBOX        "output colors",IDC_STATIC,247,7,102,196
     EDITTEXT        IDC_EDIT_OUTPUT,248,18,101,184,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | WS_VSCROLL
     LTEXT           "The number of Mosaics:",IDC_STATIC,7,270,77,8
@@ -139,6 +139,7 @@ BEGIN
     LTEXT           "Number of columns:",IDC_STATIC,157,290,64,8
     EDITTEXT        IDC_EDIT_MOSAICSWIDTH,89,290,54,14,ES_AUTOHSCROLL | ES_NUMBER
     EDITTEXT        IDC_EDIT_COLUMNSNUMBER,226,290,54,14,ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "Ratio",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,208,209,33,10
 END
 
 
@@ -218,7 +219,7 @@ BEGIN
     IDS_ABOUTBOX            "&About 3dmodeling..."
 END
 
-#endif    // English (U.S.) resources
+#endif    // 英语(美国) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
