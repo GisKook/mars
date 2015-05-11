@@ -91,4 +91,5 @@ public:
 	CEdit m_mosaicswidth;
 	CEdit m_columnsnumber;
 	CButton m_ratio;
+	CEdit m_mosaicsheight;
 };

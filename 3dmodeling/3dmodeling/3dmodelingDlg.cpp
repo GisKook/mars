@@ -75,6 +75,7 @@ void CMy3dmodelingDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_MOSAICSWIDTH, m_mosaicswidth);
 	DDX_Control(pDX, IDC_EDIT_COLUMNSNUMBER, m_columnsnumber);
 	DDX_Control(pDX, IDC_CHECK1, m_ratio);
+	DDX_Control(pDX, IDC_EDIT_MOSAICSHEIGHT, m_mosaicsheight);
 }
 
 BEGIN_MESSAGE_MAP(CMy3dmodelingDlg, CDialog)
@@ -418,15 +419,21 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 #endif
 	CString strfile;
 	m_outputfilepath.GetWindowText(strfile);
-	CString strmosaicswidth, strcolumnnumber;
+	CString strmosaicswidth,strmosaicsheight, strcolumnnumber;
 	m_mosaicswidth.GetWindowText(strmosaicswidth);
 	m_columnsnumber.GetWindowText(strcolumnnumber);
-	int moscaicswidth = atoi(strmosaicswidth.GetBuffer());
+	m_mosaicsheight.GetWindowText(strmosaicsheight);
+	int mosaicswidth = atoi(strmosaicswidth.GetBuffer());
+	int mosaicsheight = atoi(strmosaicsheight.GetBuffer());
 	int columnsnumber = atoi(strcolumnnumber.GetBuffer());
 	int rows = 0;
-	if(moscaicswidth == 0){
-		moscaicswidth = 4;
+	if(mosaicswidth == 0){
+		mosaicswidth = 4;
 		m_mosaicswidth.SetWindowText("4");
+	}
+	if(mosaicsheight == 0){
+		mosaicsheight = 4;
+		m_mosaicsheight.SetWindowText("4");
 	}
 	if(columnsnumber == 0){
 		columnsnumber = 10;
@@ -441,8 +448,8 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 	if (!strfile.IsEmpty()) {
 		HPDF_Doc  pdf;
 		HPDF_Page page;
-		HPDF_REAL PAGE_WIDTH = moscaicswidth * columnsnumber;
-		HPDF_REAL PAGE_HEIGHT = rows * moscaicswidth;
+		HPDF_REAL PAGE_WIDTH = mosaicswidth * columnsnumber;
+		HPDF_REAL PAGE_HEIGHT = rows * mosaicsheight;
 		pdf = HPDF_New (error_handler, NULL);
 		if (!pdf) {
 			m_tips.SetWindowText("error: cannot create PdfDoc object\n");
@@ -465,7 +472,7 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 				rgb.R = m_bytes.m_colors[k];
 				rgb.G = m_bytes.m_colors[k+1];
 				rgb.B = m_bytes.m_colors[k+2];
-				DrawMosaics(page,j*moscaicswidth,PAGE_HEIGHT-(i+1)*moscaicswidth, moscaicswidth, moscaicswidth, rgb);
+				DrawMosaics(page,j*mosaicswidth,PAGE_HEIGHT-(i+1)*mosaicsheight, mosaicswidth, mosaicsheight, rgb);
 				k+=3;
 			}
 		}
