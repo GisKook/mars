@@ -441,7 +441,7 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 		HPDF_Doc  pdf;
 		HPDF_Page page;
 		HPDF_REAL PAGE_WIDTH = moscaicswidth * columnsnumber;
-		HPDF_REAL PAGE_HEIGHT = moscaicswidth * m_pointcount / columnsnumber;
+		HPDF_REAL PAGE_HEIGHT = rows * moscaicswidth;
 		pdf = HPDF_New (error_handler, NULL);
 		if (!pdf) {
 			m_tips.SetWindowText("error: cannot create PdfDoc object\n");
@@ -454,7 +454,6 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 		page = HPDF_AddPage (pdf);
 		HPDF_Page_SetHeight (page, PAGE_HEIGHT);
 		HPDF_Page_SetWidth (page, PAGE_WIDTH);
-		HPDF_Page_GSave (page);
 
 		GKRGB rgb;
 
@@ -470,7 +469,6 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 			}
 		}
 		
-	    HPDF_Page_GRestore (page);
 		HPDF_SaveToFile (pdf, strfile.GetBuffer());
 		m_tips.SetWindowText("Generate ok.");
 
@@ -613,9 +611,11 @@ void CMy3dmodelingDlg::ShowColors()
 void CMy3dmodelingDlg::DrawMosaics( void * _page, float x, float y, float width, float height, GKRGB rgb )
 {
 	HPDF_Page page = (HPDF_Page)_page;
+	HPDF_Page_GSave (page);
 	HPDF_Page_SetLineWidth (page, 0.0f);
 	HPDF_Page_SetRGBStroke (page, rgb.R/255.0, rgb.G/255.0, rgb.B/255.0);
 	HPDF_Page_SetRGBFill (page, rgb.R/255.0, rgb.G/255.0, rgb.B/255.0);
 	HPDF_Page_Rectangle(page, x, y, width,height);
 	HPDF_Page_ClosePathFillStroke (page);
+    HPDF_Page_GRestore (page);
 }
