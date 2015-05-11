@@ -26,6 +26,8 @@
 #define IDC_EDIT_MOSAICSWIDTH2          1015
 #define IDC_EDIT_COLUMNSNUMBER          1015
 #define IDC_CHECK1                      1016
+#define IDC_EDIT_MOSAICSWIDTH3          1017
+#define IDC_EDIT_MOSAICSHEIGHT          1017
 
 // Next default values for new objects
 // 
