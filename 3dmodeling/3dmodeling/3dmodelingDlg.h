@@ -92,4 +92,5 @@ public:
 	CEdit m_columnsnumber;
 	CButton m_ratio;
 	CEdit m_mosaicsheight;
+	afx_msg void OnBnClickedButtonReset();
 };

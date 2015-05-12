@@ -86,6 +86,7 @@ BEGIN_MESSAGE_MAP(CMy3dmodelingDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_FORMAT, &CMy3dmodelingDlg::OnBnClickedButtonFormat)
 	ON_BN_CLICKED(IDC_BUTTON_GENERATE, &CMy3dmodelingDlg::OnBnClickedButtonGenerate)
 	ON_BN_CLICKED(IDC_BUTTON_FILEPATH, &CMy3dmodelingDlg::OnBnClickedButtonFilepath)
+	ON_BN_CLICKED(IDC_BUTTON_RESET, &CMy3dmodelingDlg::OnBnClickedButtonReset)
 END_MESSAGE_MAP()
 
 
@@ -473,10 +474,14 @@ void CMy3dmodelingDlg::OnBnClickedButtonGenerate()
 				rgb.R = m_bytes.m_colors[k];
 				rgb.G = m_bytes.m_colors[k+1];
 				rgb.B = m_bytes.m_colors[k+2];
+				if(k == m_bytecount){
+					goto end;
+				}
 				DrawMosaics(page,j*mosaicswidth,PAGE_HEIGHT-(i+1)*mosaicsheight, mosaicswidth, mosaicsheight, rgb);
 				k+=3;
 			}
 		}
+end:
 		
 		HPDF_SaveToFile (pdf, strfile.GetBuffer());
 		m_tips.SetWindowText("Generate ok.");
@@ -632,4 +637,12 @@ void CMy3dmodelingDlg::DrawMosaics( void * _page, float x, float y, float width,
 	HPDF_Page_Rectangle(page, x, y, width,height);
 	HPDF_Page_ClosePathFillStroke (page);
     HPDF_Page_GRestore (page);
+}
+void CMy3dmodelingDlg::OnBnClickedButtonReset()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	m_input.SetWindowText("");
+	m_output.SetWindowText("");
+	m_pointcount = 0;
+	m_bytecount = 0;
 }

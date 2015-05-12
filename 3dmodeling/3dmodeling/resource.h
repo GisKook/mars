@@ -22,11 +22,12 @@
 #define IDC_EDIT_INPUT2                 1011
 #define IDC_EDIT_OUTPUT                 1011
 #define IDC_STATIC_MCOUNT               1012
+#define IDC_BUTTON_FORMAT2              1013
+#define IDC_BUTTON_RESET                1013
 #define IDC_EDIT_MOSAICSWIDTH           1014
 #define IDC_EDIT_MOSAICSWIDTH2          1015
 #define IDC_EDIT_COLUMNSNUMBER          1015
 #define IDC_CHECK1                      1016
-#define IDC_EDIT_MOSAICSWIDTH3          1017
 #define IDC_EDIT_MOSAICSHEIGHT          1017
 
 // Next default values for new objects
