@@ -160,6 +160,7 @@ BOOL CMy3dmodelingDlg::OnInitDialog()
 	m_msa.SetWindowText("45");
 	m_maxa.SetWindowText("120");
 	m_mina.SetWindowText("10");
+	m_ratio.SetCheck(1);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
