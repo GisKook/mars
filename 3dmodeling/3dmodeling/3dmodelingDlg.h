@@ -87,7 +87,7 @@ public:
 	CEdit m_msa;
 	CEdit m_maxa;
 	CEdit m_mina;
-	CEdit m_output;
+	CEditEx m_output;
 	CStatic m_mosaicscount;
 	CEdit m_mosaicswidth;
 	CEdit m_columnsnumber;
