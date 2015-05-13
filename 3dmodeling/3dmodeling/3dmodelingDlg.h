@@ -5,6 +5,7 @@
 #include "afxwin.h"
 #include <map>
 #include <string>
+#include "EditEx.h"
 
 
 // CMy3dmodelingDlg dialog
@@ -45,7 +46,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedButtonFormat();
-	CEdit m_input;
+	CEditEx m_input;
 private:
 	int IsIllegal(CString strinput);
 	int FillBytes(CString strinput);
