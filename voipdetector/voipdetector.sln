@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "voipdetector", "voipdetector\voipdetector.vcproj", "{76F382FC-CC54-4389-9608-A8C9DC3A2824}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "voipdetetorW", "voipdetetorW\voipdetetorW.vcproj", "{D8751DAF-AAA5-4928-8447-144B7E8DED81}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{76F382FC-CC54-4389-9608-A8C9DC3A2824}.Debug|Win32.ActiveCfg = Debug|Win32
+		{76F382FC-CC54-4389-9608-A8C9DC3A2824}.Debug|Win32.Build.0 = Debug|Win32
+		{76F382FC-CC54-4389-9608-A8C9DC3A2824}.Release|Win32.ActiveCfg = Release|Win32
+		{76F382FC-CC54-4389-9608-A8C9DC3A2824}.Release|Win32.Build.0 = Release|Win32
+		{D8751DAF-AAA5-4928-8447-144B7E8DED81}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D8751DAF-AAA5-4928-8447-144B7E8DED81}.Debug|Win32.Build.0 = Debug|Win32
+		{D8751DAF-AAA5-4928-8447-144B7E8DED81}.Release|Win32.ActiveCfg = Release|Win32
+		{D8751DAF-AAA5-4928-8447-144B7E8DED81}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
