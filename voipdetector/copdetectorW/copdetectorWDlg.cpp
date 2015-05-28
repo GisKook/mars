@@ -5,6 +5,7 @@
 #include "copdetectorW.h"
 #include "copdetectorWDlg.h"
 #include "CaptureInterfaces.h"
+#include "sipprotocol.h"
 
 
 #ifdef _DEBUG
@@ -117,6 +118,7 @@ BOOL CcopdetectorWDlg::OnInitDialog()
 	notify = "Listening on "+strdev;
 	m_trayicon.SetTooltipText(notify);
 	//::SendMessage(m_trayicon.GetNotificationWnd()->m_hWnd,WM_ICON_NOTIFY,,512);
+	m_packethandler = sipprotocol_packet_handler;
 
 	DWORD tid;
 	m_hthread = CreateThread(NULL,NULL,(LPTHREAD_START_ROUTINE)CcopdetectorWDlg::capturenet,this,0,&tid);
