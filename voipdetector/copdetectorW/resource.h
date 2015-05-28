@@ -6,11 +6,12 @@
 #define IDD_ABOUTBOX                    100
 #define IDS_ABOUTBOX                    101
 #define IDD_COPDETECTORW_DIALOG         102
-#define IDR_MAINFRAME                   128
 #define IDD_DIALOG1                     129
 #define IDI_ICON_PHONE                  131
 #define IDR_MENU1                       132
 #define IDR_MENU_TRAY                   132
+#define IDI_ICON_PHONE1                 132
+#define IDR_MAINFRAME                   132
 #define ID_VOIPDETECTOR_EXIT            32771
 
 // Next default values for new objects
