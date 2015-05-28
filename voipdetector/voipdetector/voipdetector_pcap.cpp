@@ -64,7 +64,7 @@ pcap_t *initpcap( char * device,int verbose, char * filter, char * errbuf )
 		fprintf(stdout, "%s has been opened in  %s mode. (%s/%s)\n", dev, (gpromisc ? "promisc" : "non-promisc"), netstr, maskstr);
 	int result = 0;
 	if (strlen(filter) > 0) {
-		result = pcap_compile(pd, &fprog, filter, 1, netp);
+		result = pcap_compile(pd, &fprog, filter, 0, netp);
 		if(result == -1){
 			fprintf(stdout,"pcap_compile error %s\n",pcap_geterr(pd));
 		}

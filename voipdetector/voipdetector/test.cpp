@@ -15,7 +15,7 @@ int main(){
 		exit(1);
 	}
 	//if(pcapfd = initpcap(alldevs->name,1,"",errbuf) == -1){
-	fd = initpcap("",1,"udp",errbuf);
+	fd = initpcap("",1,"tcp",errbuf);
 //	if(pcapfd == -1){
 //		fprintf(stdout,"%s\n",errbuf);
 //		exit(1);

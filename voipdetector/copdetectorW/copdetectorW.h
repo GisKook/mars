@@ -1,4 +1,4 @@
-// voipdetetorW.h : main header file for the PROJECT_NAME application
+// copdetectorW.h : main header file for the PROJECT_NAME application
 //
 
 #pragma once
@@ -10,14 +10,14 @@
 #include "resource.h"		// main symbols
 
 
-// CvoipdetetorWApp:
-// See voipdetetorW.cpp for the implementation of this class
+// CcopdetectorWApp:
+// See copdetectorW.cpp for the implementation of this class
 //
 
-class CvoipdetetorWApp : public CWinApp
+class CcopdetectorWApp : public CWinApp
 {
 public:
-	CvoipdetetorWApp();
+	CcopdetectorWApp();
 
 // Overrides
 	public:
@@ -28,4 +28,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-extern CvoipdetetorWApp theApp;
+extern CcopdetectorWApp theApp;

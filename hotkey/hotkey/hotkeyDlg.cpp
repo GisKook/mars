@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include "hotkey.h"
 #include "hotkeyDlg.h"
+#include <string>
+#include <vector>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -81,6 +83,8 @@ END_MESSAGE_MAP()
 BOOL ChotkeyDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
+	std::vector<std::string> sr;
+	sr.push_back("ba");
 
 	// Add "About..." menu item to system menu.
 

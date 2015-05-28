@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="voipdetetorW"
-	ProjectGUID="{D8751DAF-AAA5-4928-8447-144B7E8DED81}"
-	RootNamespace="voipdetetorW"
+	Name="copdetectorW"
+	ProjectGUID="{0A71C0DA-0A75-45A7-8F75-A4EACC5C65DD}"
+	RootNamespace="copdetectorW"
 	Keyword="MFCProj"
 	TargetFrameworkVersion="196613"
 	>
@@ -21,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			UseOfMFC="2"
+			UseOfMFC="1"
 			CharacterSet="2"
 			>
 			<Tool
@@ -45,11 +45,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="../libpcap/include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				UsePrecompiledHeader="2"
+				RuntimeLibrary="1"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -67,7 +68,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				LinkIncremental="2"
+				AdditionalDependencies="packet.lib wpcap.lib"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="../libpcap/lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -181,12 +184,20 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
+			Name="源文件"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
 				RelativePath=".\CaptureInterfaces.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\copdetectorW.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\copdetectorWDlg.cpp"
 				>
 			</File>
 			<File
@@ -210,21 +221,29 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\voipdetetorW.cpp"
+				RelativePath=".\TrayIcon.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\voipdetetorWDlg.cpp"
+				RelativePath=".\voippcap.cpp"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="Header Files"
+			Name="头文件"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
 				RelativePath=".\CaptureInterfaces.h"
+				>
+			</File>
+			<File
+				RelativePath=".\copdetectorW.h"
+				>
+			</File>
+			<File
+				RelativePath=".\copdetectorWDlg.h"
 				>
 			</File>
 			<File
@@ -240,29 +259,37 @@
 				>
 			</File>
 			<File
-				RelativePath=".\voipdetetorW.h"
+				RelativePath=".\TrayIcon.h"
 				>
 			</File>
 			<File
-				RelativePath=".\voipdetetorWDlg.h"
+				RelativePath=".\voippcap.h"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="Resource Files"
+			Name="资源文件"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\res\voipdetetorW.ico"
+				RelativePath=".\res\copdetectorW.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\voipdetetorW.rc"
+				RelativePath=".\copdetectorW.rc"
 				>
 			</File>
 			<File
-				RelativePath=".\res\voipdetetorW.rc2"
+				RelativePath=".\res\copdetectorW.rc2"
+				>
+			</File>
+			<File
+				RelativePath=".\res\icon1.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\res\phone.ico"
 				>
 			</File>
 		</Filter>
@@ -272,5 +299,9 @@
 		</File>
 	</Files>
 	<Globals>
+		<Global
+			Name="RESOURCE_FILE"
+			Value="copdetectorW.rc"
+		/>
 	</Globals>
 </VisualStudioProject>

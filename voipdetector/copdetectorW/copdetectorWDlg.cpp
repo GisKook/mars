@@ -1,15 +1,16 @@
-// voipdetetorWDlg.cpp : implementation file
+// copdetectorWDlg.cpp : implementation file
 //
 
 #include "stdafx.h"
-#include "voipdetetorW.h"
-#include "voipdetetorWDlg.h"
+#include "copdetectorW.h"
+#include "copdetectorWDlg.h"
 #include "CaptureInterfaces.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
+#define WM_ICON_NOTIFY  WM_USER+5001
 
 // CAboutDlg dialog used for App About
 
@@ -42,33 +43,36 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
 END_MESSAGE_MAP()
 
 
-// CvoipdetetorWDlg dialog
+// CcopdetectorWDlg dialog
 
 
 
 
-CvoipdetetorWDlg::CvoipdetetorWDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CvoipdetetorWDlg::IDD, pParent)
+CcopdetectorWDlg::CcopdetectorWDlg(CWnd* pParent /*=NULL*/)
+	: CDialog(CcopdetectorWDlg::IDD, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
-void CvoipdetetorWDlg::DoDataExchange(CDataExchange* pDX)
+void CcopdetectorWDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 }
 
-BEGIN_MESSAGE_MAP(CvoipdetetorWDlg, CDialog)
+BEGIN_MESSAGE_MAP(CcopdetectorWDlg, CDialog)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_MESSAGE(WM_ICON_NOTIFY, OnTrayNotification, "voip", IDR_MENU_TRAY)
 	//}}AFX_MSG_MAP
+	ON_WM_NCPAINT()
+	ON_COMMAND(ID_VOIPDETECTOR_EXIT, &CcopdetectorWDlg::OnVoipdetectorExit)
 END_MESSAGE_MAP()
 
 
-// CvoipdetetorWDlg message handlers
+// CcopdetectorWDlg message handlers
 
-BOOL CvoipdetetorWDlg::OnInitDialog()
+BOOL CcopdetectorWDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
@@ -96,11 +100,28 @@ BOOL CvoipdetetorWDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-	CreateCaptureInterfaceDialog();
+	//TRAYICON
+	m_hIconPhone = AfxGetApp()->LoadIcon(IDI_ICON_PHONE); 
+	m_trayicon.Create(this, WM_ICON_NOTIFY, "voip detector",m_hIconPhone,IDR_MENU_TRAY);
+	//TRAYICON
+	m_pcap = voippcap_create();
+	CString strdev = CreateCaptureInterfaceDialog();
+	if (strdev.IsEmpty())
+	{
+		voippcap_destroy(m_pcap);
+		MessageBox("Since the net is not selected.Program will exit.","Tips");
+		exit(1);
+	}
+	CString notify;
+	notify = "Listening on "+strdev;
+	m_trayicon.SetTooltipText(notify);
+	m_trayicon.ShowIcon();
+	//::SendMessage(m_trayicon.GetNotificationWnd()->m_hWnd,WM_ICON_NOTIFY,,512);
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
-void CvoipdetetorWDlg::OnSysCommand(UINT nID, LPARAM lParam)
+void CcopdetectorWDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
 	{
@@ -117,7 +138,7 @@ void CvoipdetetorWDlg::OnSysCommand(UINT nID, LPARAM lParam)
 //  to draw the icon.  For MFC applications using the document/view model,
 //  this is automatically done for you by the framework.
 
-void CvoipdetetorWDlg::OnPaint()
+void CcopdetectorWDlg::OnPaint()
 {
 	if (IsIconic())
 	{
@@ -144,14 +165,62 @@ void CvoipdetetorWDlg::OnPaint()
 
 // The system calls this function to obtain the cursor to display while the user drags
 //  the minimized window.
-HCURSOR CvoipdetetorWDlg::OnQueryDragIcon()
+HCURSOR CcopdetectorWDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-CString CvoipdetetorWDlg::CreateCaptureInterfaceDialog()
-{
+CString CcopdetectorWDlg::CreateCaptureInterfaceDialog()
+{ 
+	char errbuf[PCAP_ERRBUF_SIZE] = {0};
+	std::vector<std::string> desc;
+	std::vector<std::string> devs = voippcap_getalldevs(m_pcap,desc,errbuf);
+	if(devs.size() == 1){
+		return devs[0].c_str();
+	}else if(devs.size() == 0){
+		return "";
+	}
 	CCaptureInterfaces dlgCaptureInterfaces; 
+	std::vector<std::string>::iterator it;
+	int i = 0;
+	for (it = devs.begin(); it != devs.end(); ++it) {
+		dlgCaptureInterfaces.AddInterface(desc[i]);
+		i++;
+	}
 	dlgCaptureInterfaces.DoModal();
-	return "abc";
+
+	int devindex = dlgCaptureInterfaces.GetDevIndex();
+	if(devindex != -1){
+		return devs[devindex].c_str();
+	}
+
+	return "";
+}
+
+LRESULT CcopdetectorWDlg::OnTrayNotification( WPARAM wParam,LPARAM lParam )
+{
+	if(LOWORD(lParam) == WM_LBUTTONDOWN) 
+	{
+	}
+	return m_trayicon.OnTrayNotification(wParam, lParam);
+}
+
+void CcopdetectorWDlg::OnNcPaint()
+{
+	// TODO: 在此处添加消息处理程序代码
+	// 不为绘图消息调用 CDialog::OnNcPaint()
+	static int i = 2;
+	if(i > 0)
+	{
+		i --;
+		ShowWindow(SW_HIDE);
+	}
+	else
+		CDialog::OnNcPaint();
+}
+
+void CcopdetectorWDlg::OnVoipdetectorExit()
+{
+	// TODO: 在此添加命令处理程序代码
+	OnOK();
 }

@@ -1,39 +1,39 @@
-// voipdetetorW.cpp : Defines the class behaviors for the application.
+// copdetectorW.cpp : Defines the class behaviors for the application.
 //
 
 #include "stdafx.h"
-#include "voipdetetorW.h"
-#include "voipdetetorWDlg.h"
+#include "copdetectorW.h"
+#include "copdetectorWDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 
-// CvoipdetetorWApp
+// CcopdetectorWApp
 
-BEGIN_MESSAGE_MAP(CvoipdetetorWApp, CWinApp)
+BEGIN_MESSAGE_MAP(CcopdetectorWApp, CWinApp)
 	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
 END_MESSAGE_MAP()
 
 
-// CvoipdetetorWApp construction
+// CcopdetectorWApp construction
 
-CvoipdetetorWApp::CvoipdetetorWApp()
+CcopdetectorWApp::CcopdetectorWApp()
 {
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
 }
 
 
-// The one and only CvoipdetetorWApp object
+// The one and only CcopdetectorWApp object
 
-CvoipdetetorWApp theApp;
+CcopdetectorWApp theApp;
 
 
-// CvoipdetetorWApp initialization
+// CcopdetectorWApp initialization
 
-BOOL CvoipdetetorWApp::InitInstance()
+BOOL CcopdetectorWApp::InitInstance()
 {
 	// InitCommonControlsEx() is required on Windows XP if an application
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable
@@ -58,7 +58,7 @@ BOOL CvoipdetetorWApp::InitInstance()
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 
-	CvoipdetetorWDlg dlg;
+	CcopdetectorWDlg dlg;
 	m_pMainWnd = &dlg;
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
