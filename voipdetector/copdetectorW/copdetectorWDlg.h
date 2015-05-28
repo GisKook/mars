@@ -20,10 +20,16 @@ public:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 private:
 	CString CreateCaptureInterfaceDialog();
+public:
+	int m_index;
 	struct voippcap * m_pcap;
+	packet_handler m_packethandler;
 private:
 	CTrayIcon m_trayicon;
 	HICON m_hIconPhone;
+private:
+	HANDLE m_hthread;
+	static void capturenet(void *);
 
 // Implementation
 protected:

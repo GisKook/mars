@@ -6,6 +6,7 @@
 #include "copdetectorWDlg.h"
 #include "CaptureInterfaces.h"
 
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -115,8 +116,10 @@ BOOL CcopdetectorWDlg::OnInitDialog()
 	CString notify;
 	notify = "Listening on "+strdev;
 	m_trayicon.SetTooltipText(notify);
-	m_trayicon.ShowIcon();
 	//::SendMessage(m_trayicon.GetNotificationWnd()->m_hWnd,WM_ICON_NOTIFY,,512);
+
+	DWORD tid;
+	m_hthread = CreateThread(NULL,NULL,(LPTHREAD_START_ROUTINE)CcopdetectorWDlg::capturenet,this,0,&tid);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -189,9 +192,9 @@ CString CcopdetectorWDlg::CreateCaptureInterfaceDialog()
 	}
 	dlgCaptureInterfaces.DoModal();
 
-	int devindex = dlgCaptureInterfaces.GetDevIndex();
-	if(devindex != -1){
-		return devs[devindex].c_str();
+	m_index = dlgCaptureInterfaces.GetDevIndex();
+	if(m_index != -1){
+		return devs[m_index].c_str();
 	}
 
 	return "";
@@ -223,4 +226,11 @@ void CcopdetectorWDlg::OnVoipdetectorExit()
 {
 	// TODO: 在此添加命令处理程序代码
 	OnOK();
+}
+
+void CcopdetectorWDlg::capturenet( void * param)
+{
+	CcopdetectorWDlg *dlg = (CcopdetectorWDlg *)param;
+	char errbuf[PCAP_ERRBUF_SIZE];
+	voippcap_capture(dlg->m_pcap,dlg->m_index,dlg->m_packethandler,errbuf);
 }
