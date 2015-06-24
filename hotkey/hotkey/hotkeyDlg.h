@@ -4,6 +4,7 @@
 #pragma once
 
 #include "TrayIcon.h"
+#include "afxwin.h"
 // ChotkeyDlg dialog
 class ChotkeyDlg : public CDialog
 {
@@ -20,8 +21,10 @@ public:
 private:
 	CTrayIcon m_trayicon;
 	bool m_bcheck;
+	bool m_bshow;
 	HICON m_hCheck;
 	HICON m_hUncheck;
+	HICON m_hDollor;
 // Implementation
 private:
 	CString GetClipboardText();
@@ -44,4 +47,15 @@ public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnNcPaint();
 	afx_msg void OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2);
+	afx_msg void OnEnChangeEditHb();
+	CEdit m_yourearnings;
+	CEdit m_billedtoclient;
+	CEdit m_bidscount;
+	CEdit m_yourearnings2;
+	CEdit m_highbids;
+	CEdit m_lowbids;
+	CEdit m_avgbids;
+	CEdit m_theothers;
+	afx_msg void OnBnClickedButtonBtc();
+	afx_msg void OnBnClickedButtonCalc();
 };

@@ -14,6 +14,7 @@
 #define WM_ICON_NOTIFY  WM_USER+5001
 #define ID_COPY WM_USER+5002
 #define ID_PASTE WM_USER+5003
+#define ID_CALC WM_USER+5004
 
 
 // CAboutDlg dialog used for App About
@@ -61,6 +62,14 @@ ChotkeyDlg::ChotkeyDlg(CWnd* pParent /*=NULL*/)
 void ChotkeyDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_EDIT_YOUREARNINGS, m_yourearnings);
+	DDX_Control(pDX, IDC_EDIT_BTC, m_billedtoclient);
+	DDX_Control(pDX, IDC_EDIT_BIDSCOUNT, m_bidscount);
+	DDX_Control(pDX, IDC_EDIT_YES, m_yourearnings2);
+	DDX_Control(pDX, IDC_EDIT_HB, m_highbids);
+	DDX_Control(pDX, IDC_EDIT_LB, m_lowbids);
+	DDX_Control(pDX, IDC_EDIT_AVGBIDS, m_avgbids);
+	DDX_Control(pDX, IDC_EDIT_TOAVG, m_theothers);
 }
 
 BEGIN_MESSAGE_MAP(ChotkeyDlg, CDialog)
@@ -75,6 +84,9 @@ BEGIN_MESSAGE_MAP(ChotkeyDlg, CDialog)
 	ON_WM_CREATE()
 	ON_WM_NCPAINT()
 	ON_WM_HOTKEY()
+	ON_EN_CHANGE(IDC_EDIT_HB, &ChotkeyDlg::OnEnChangeEditHb)
+	ON_BN_CLICKED(IDC_BUTTON_BTC, &ChotkeyDlg::OnBnClickedButtonBtc)
+	ON_BN_CLICKED(IDC_BUTTON_CALC, &ChotkeyDlg::OnBnClickedButtonCalc)
 END_MESSAGE_MAP()
 
 
@@ -83,8 +95,6 @@ END_MESSAGE_MAP()
 BOOL ChotkeyDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	std::vector<std::string> sr;
-	sr.push_back("ba");
 
 	// Add "About..." menu item to system menu.
 
@@ -112,14 +122,21 @@ BOOL ChotkeyDlg::OnInitDialog()
 	// TODO: Add extra initialization here
 	m_hCheck = AfxGetApp()->LoadIcon(IDI_ICON_CHECK); 
 	m_hUncheck = AfxGetApp()->LoadIcon(IDI_ICON_UNCHECK); 
+	m_hDollor = AfxGetApp()->LoadIcon(IDI_ICON_DOLLOR);
 	m_bcheck = false;
-	m_trayicon.Create(this, WM_ICON_NOTIFY, "Paste with line break",m_hUncheck,IDR_MENU_TRAYICON);
-	if(!::RegisterHotKey(this->m_hWnd,ID_COPY,MOD_CONTROL | MOD_ALT,'C')){
-		MessageBox("ctrl+alt+C Register failed");
+	//m_trayicon.Create(this, WM_ICON_NOTIFY, "Paste with line break",m_hUncheck,IDR_MENU_TRAYICON);
+	m_trayicon.Create(this, WM_ICON_NOTIFY, "elance's calc",m_hDollor,IDR_MENU_TRAYICON);
+//	if(!::RegisterHotKey(this->m_hWnd,ID_COPY,MOD_CONTROL | MOD_ALT,'C')){
+//		MessageBox("ctrl+alt+C Register failed");
+//	}
+//	if(!::RegisterHotKey(this->m_hWnd,ID_PASTE,MOD_CONTROL | MOD_ALT,'V')){
+//		MessageBox("ctrl+alt+V Register failed");
+//	}
+	if(!::RegisterHotKey(this->m_hWnd,ID_CALC,MOD_CONTROL | MOD_ALT,'X')){
+		MessageBox("ctrl+alt+X Register failed");
+		return FALSE;
 	}
-	if(!::RegisterHotKey(this->m_hWnd,ID_PASTE,MOD_CONTROL | MOD_ALT,'V')){
-		MessageBox("ctrl+alt+V Register failed");
-	}
+	m_bshow = false;
 	
 	//::RegisterHotKey(this->GetSafeHwnd(),ID_PASTE,MOD_CONTROL|MOD_ALT,'v');
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -178,14 +195,17 @@ LRESULT ChotkeyDlg::OnTrayNotification( WPARAM wParam,LPARAM lParam )
 { 
 	if(LOWORD(lParam) == WM_LBUTTONDOWN) 
 	{
-		m_bcheck = !m_bcheck;
-		if(m_bcheck){
-			m_trayicon.SetIcon(m_hCheck); 
-			m_trayicon.SetTooltipText("Paste without line break");
-		}else{
-			m_trayicon.SetIcon(m_hUncheck);
-			m_trayicon.SetTooltipText("Paste with line break");
-		}
+//		m_bcheck = !m_bcheck;
+//		if(m_bcheck){
+//			m_trayicon.SetIcon(m_hCheck); 
+//			m_trayicon.SetTooltipText("Paste without line break");
+//		}else{
+//			m_trayicon.SetIcon(m_hUncheck);
+//			m_trayicon.SetTooltipText("Paste with line break");
+//		}
+		this->ShowWindow(SW_NORMAL);
+		m_bshow = true;
+
 	}
 	return m_trayicon.OnTrayNotification(wParam, lParam);
 }
@@ -202,8 +222,9 @@ void ChotkeyDlg::OnClose()
 void ChotkeyDlg::OnHotkeyExit()
 {
 	// TODO: 在此添加命令处理程序代码
-	UnregisterHotKey(this->m_hWnd, ID_COPY);
-	UnregisterHotKey(this->m_hWnd, ID_PASTE);
+//	UnregisterHotKey(this->m_hWnd, ID_COPY);
+//	UnregisterHotKey(this->m_hWnd, ID_PASTE);
+	UnregisterHotKey(this->m_hWnd, ID_CALC);
 	OnOK();
 }
 
@@ -227,13 +248,13 @@ void ChotkeyDlg::OnNcPaint()
 {
 	// TODO: 在此处添加消息处理程序代码
 	// 不为绘图消息调用 CDialog::OnNcPaint()
-	static int i = 2;
-	if(i > 0)
-	{
-		i --;
-		ShowWindow(SW_HIDE);
-	}
-	else
+//	static int i = 2;
+//	if(i > 0)
+//	{
+//		i --;
+//		ShowWindow(SW_HIDE);
+//	}
+//	else
 		CDialog::OnNcPaint();
 }
 
@@ -264,6 +285,14 @@ void ChotkeyDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 		keybd_event(VkKeyScan('V'),0xaf,0 , 0); // 'C' Press
 		keybd_event(VkKeyScan('V'),0xaf, KEYEVENTF_KEYUP,0); // 'C' Release
 		keybd_event(VK_CONTROL,0x9d,KEYEVENTF_KEYUP,0); // Ctrl Release
+	}else if (nHotKeyId == ID_CALC){
+		if(!m_bshow){
+			this->ShowWindow(SW_NORMAL);
+			m_bshow = true;
+		}else{
+			this->ShowWindow(SW_HIDE);
+			m_bshow = false;
+		}
 	}
 
 	//CDialog::OnHotKey(nHotKeyId, nKey1, nKey2);
@@ -343,4 +372,63 @@ CString ChotkeyDlg::ClearLinebreak( CString text ){
 		}
 	}
 	return strwithoutlinebreak;
+}
+
+void ChotkeyDlg::OnEnChangeEditHb()
+{
+	// TODO:  如果该控件是 RICHEDIT 控件，则它将不会
+	// 发送该通知，除非重写 CDialog::OnInitDialog()
+	// 函数并调用 CRichEditCtrl().SetEventMask()，
+	// 同时将 ENM_CHANGE 标志“或”运算到掩码中。
+
+	// TODO:  在此添加控件通知处理程序代码
+}
+
+void ChotkeyDlg::OnBnClickedButtonBtc()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CString strmyearnings,strbilledtoclient;
+	m_yourearnings.GetWindowText(strmyearnings);
+	m_billedtoclient.GetWindowText(strbilledtoclient);
+	strmyearnings.Trim();
+	strbilledtoclient.Trim();
+	if(!strmyearnings.IsEmpty()){
+		strbilledtoclient.Format("%0.2f", atof(strmyearnings.GetBuffer())/0.9125);
+		m_billedtoclient.SetWindowText(strbilledtoclient);
+	}else if(!strbilledtoclient.IsEmpty()){
+		strmyearnings.Format("%0.2f", atof(strbilledtoclient) - atof(strbilledtoclient.GetBuffer())*0.0875);
+		m_yourearnings.SetWindowText(strmyearnings);
+	}
+}
+
+void ChotkeyDlg::OnBnClickedButtonCalc()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CString strbidscount,stryourearnings,strhighbids,strlowbids,stravgbids,strresult;
+	m_bidscount.GetWindowText(strbidscount);
+	m_yourearnings2.GetWindowText(stryourearnings);
+	m_highbids.GetWindowText(strhighbids);
+	m_lowbids.GetWindowText(strlowbids);
+	m_avgbids.GetWindowText(stravgbids);
+	if(strbidscount.IsEmpty() || stryourearnings.IsEmpty() || strhighbids.IsEmpty() ||
+		strlowbids.IsEmpty() || stravgbids.IsEmpty()){
+			return;
+	}
+	int bidscoount = atoi(strbidscount);
+	float yourearnings, higbids,lowbids,avgbids;
+	yourearnings = atof(stryourearnings.GetBuffer());
+	higbids = atof(strhighbids.GetBuffer());
+	lowbids = atof(strlowbids.GetBuffer());
+	avgbids = atof(stravgbids.GetBuffer());
+
+	float total = avgbids * bidscoount;
+	float avg ;
+	if(abs(higbids - yourearnings/0.9125) < 1.0 ){
+		avg = (total - higbids - lowbids )/(bidscoount-2);
+	}else{
+		avg = (total - higbids - lowbids - yourearnings/0.9125)/(bidscoount-3);
+	}
+	
+	strresult.Format("%0.2f", avg);
+	m_theothers.SetWindowText(strresult);
 }

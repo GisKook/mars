@@ -262,6 +262,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\res\dollor.ico"
+				>
+			</File>
+			<File
 				RelativePath=".\res\hotkey.ico"
 				>
 			</File>
