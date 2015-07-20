@@ -12,8 +12,3 @@ CTriangleMenu::~CTriangleMenu(void)
 void CTriangleMenu::DrawItem( LPDRAWITEMSTRUCT lpDrawItemStruct ) { 
 	
 }
-
-void CTriangleMenu::MeasureItem( LPMEASUREITEMSTRUCT lpMeasureItemStruct )
-{
-
-}

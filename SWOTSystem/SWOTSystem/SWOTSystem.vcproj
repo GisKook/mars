@@ -222,6 +222,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TriangleButton.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TriangleMenu.cpp"
 				>
 			</File>
@@ -257,6 +261,10 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TriangleButton.h"
 				>
 			</File>
 			<File
