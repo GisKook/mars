@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "TriangleButton.h"
+#include "ButtonTriangle.h"
 class CSWOTSystemView : public CView
 {
 protected: // create from serialization only
@@ -28,7 +28,6 @@ protected:
 	virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
 	virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
 
-
 // Implementation
 public:
 	virtual ~CSWOTSystemView();
@@ -37,13 +36,29 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
+private:
+	void DrawRect(CDC *pdc, RECT * rect, COLORREF c);
+	void DrawLogo(CDC *pdc);
+private:
+	const static int m_logolen;
+
 protected:
 private:
-	CTriangleButton m_mainbtn[6];
+	CButtonTriangle m_mainbtn[6];
 
 // Generated message map functions
+private:
+	void ResetMenu(int index);
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnPromotion();
+	afx_msg void OnProduction();
+	afx_msg void OnAdministration();
+	afx_msg void OnManagement();
+	afx_msg void OnFinnacial();
+	afx_msg void OnLegal();
 };
 
 #ifndef _DEBUG  // debug version in SWOTSystemView.cpp
