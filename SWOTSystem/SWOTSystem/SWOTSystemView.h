@@ -47,7 +47,7 @@ private:
 	CButtonTriangle m_mainbtn[6];
 
 // Generated message map functions
-private:
+public:
 	void ResetMenu(int index);
 protected:
 	DECLARE_MESSAGE_MAP()

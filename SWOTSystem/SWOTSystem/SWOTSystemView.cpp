@@ -26,6 +26,11 @@ BEGIN_MESSAGE_MAP(CSWOTSystemView, CView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CView::OnFilePrintPreview)
 	ON_WM_LBUTTONDOWN()
 	ON_BN_CLICKED(IDM_PROMOTION, &CSWOTSystemView::OnPromotion)
+	ON_BN_CLICKED(IDM_PRODUCTION, &CSWOTSystemView::OnProduction)
+	ON_BN_CLICKED(IDM_ADMINISTRATION, &CSWOTSystemView::OnAdministration)
+	ON_BN_CLICKED(IDM_MANAGEMENT, &CSWOTSystemView::OnManagement)
+	ON_BN_CLICKED(IDM_FINNACIAL, &CSWOTSystemView::OnFinnacial)
+	ON_BN_CLICKED(IDM_LEGAL, &CSWOTSystemView::OnLegal)
 END_MESSAGE_MAP()
 
 // CSWOTSystemView construction/destruction
@@ -104,33 +109,36 @@ void CSWOTSystemView::OnInitialUpdate()
 { 
 	int x = m_logolen;
 	DWORD dwStyle = ( WS_VISIBLE | BS_FLAT | BS_LEFT | BS_OWNERDRAW ) & ~WS_BORDER & ~WS_DLGFRAME;
-	m_mainbtn[0].Create("Promotion", dwStyle, CRect(0,0,0,0), this, IDM_PROMOTION);
-	m_mainbtn[0].SetCaption("Promotion");
+	m_mainbtn[0].Create("Promotion", dwStyle, CRect(0,0,0,0), this, IDM_PROMOTION, 0);
 	m_mainbtn[0].ModifyStyleEx( 0, WS_EX_STATICEDGE, 0);
 	x = m_mainbtn[0].MoveButton(x,0,18);
+	m_mainbtn[0].AddMenuItem(IDMP_PROMOTION, "1.   Promotion", 0);
+	m_mainbtn[0].AddMenuItem(IDMP_PUBLICRELATIONS, "1.1 Public relations(PR)", 0);
+	m_mainbtn[0].AddMenuItem(IDMP_RECEPTION, "1.2 Reception", 0);
+	m_mainbtn[0].AddMenuItem(IDMP_CUSTOMERSERVICES, "1.3 Customer Services", 0);
+	m_mainbtn[0].AddMenuItem(IDMP_SALES, "1.4 Sales", 0);
+	m_mainbtn[0].AddMenuItem(IDMP_AFTERSALESSUPPORT, "1.5 After-sales Support", 0);
+	m_mainbtn[0].AddMenuItem(IDMP_MARKETING , "1.6 Marketing", 0);
+	m_mainbtn[0].AddMenuItem(IDMP_ADVERTISING, "1.7 Advertising", 0);
+	m_mainbtn[0].AddMenuItem(IDMP_PROMOTION2, "1.8 Promotion", 0);
 
-	m_mainbtn[1].Create("Production", dwStyle, CRect(0,0,0,0), this, IDM_PROMOTION);
-	m_mainbtn[1].SetCaption("Production");
+	m_mainbtn[1].Create("Production", dwStyle, CRect(0,0,0,0), this, IDM_PRODUCTION, 1);
 	m_mainbtn[1].ModifyStyleEx( 0, WS_EX_STATICEDGE, 0);
 	x = m_mainbtn[1].MoveButton(x,0,18);
 
-	m_mainbtn[2].Create("Administration", dwStyle, CRect(0,0,0,0), this, IDM_PROMOTION);
-	m_mainbtn[2].SetCaption("Administration");
+	m_mainbtn[2].Create("Administration", dwStyle, CRect(0,0,0,0), this, IDM_ADMINISTRATION, 2);
 	m_mainbtn[2].ModifyStyleEx( 0, WS_EX_STATICEDGE, 0);
 	x = m_mainbtn[2].MoveButton(x,0,18);
 
-	m_mainbtn[3].Create("Management", dwStyle, CRect(0,0,0,0), this, IDM_PROMOTION);
-	m_mainbtn[3].SetCaption("Management");
+	m_mainbtn[3].Create("Management", dwStyle, CRect(0,0,0,0), this, IDM_MANAGEMENT, 3);
 	m_mainbtn[3].ModifyStyleEx( 0, WS_EX_STATICEDGE, 0);
 	x = m_mainbtn[3].MoveButton(x,0,18);
 
-	m_mainbtn[4].Create("Finnacial", dwStyle, CRect(0,0,0,0), this, IDM_PROMOTION);
-	m_mainbtn[4].SetCaption("Finnacial");
+	m_mainbtn[4].Create("Finnacial", dwStyle, CRect(0,0,0,0), this, IDM_FINNACIAL, 4);
 	m_mainbtn[4].ModifyStyleEx( 0, WS_EX_STATICEDGE, 0);
 	x = m_mainbtn[4].MoveButton(x,0,18);
 
-	m_mainbtn[5].Create("Legal", dwStyle, CRect(0,0,0,0), this, IDM_PROMOTION);
-	m_mainbtn[5].SetCaption("Legal");
+	m_mainbtn[5].Create("Legal", dwStyle, CRect(0,0,0,0), this, IDM_LEGAL,5);
 	m_mainbtn[5].ModifyStyleEx( 0, WS_EX_STATICEDGE, 0);
 	x = m_mainbtn[5].MoveButton(x,0,18);
 }
@@ -220,41 +228,41 @@ void CSWOTSystemView::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CSWOTSystemView::OnPromotion()
 {
-	MessageBox(__FUNCTION__);
+	//MessageBox(__FUNCTION__);
 	ResetMenu(0);
 }
 
 void CSWOTSystemView::OnProduction()
 {
-	MessageBox(__FUNCTION__);
+	//MessageBox(__FUNCTION__);
 	ResetMenu(1);
 
 }
 
 void CSWOTSystemView::OnAdministration()
 {
-	MessageBox(__FUNCTION__);
+	//MessageBox(__FUNCTION__);
 	ResetMenu(2);
 
 }
 
 void CSWOTSystemView::OnManagement()
 {
-	MessageBox(__FUNCTION__);
+	//MessageBox(__FUNCTION__);
 	ResetMenu(3);
 
 }
 
 void CSWOTSystemView::OnFinnacial()
 {
-	MessageBox(__FUNCTION__);
+	//MessageBox(__FUNCTION__);
 	ResetMenu(4);
 
 }
 
 void CSWOTSystemView::OnLegal()
 {
-	MessageBox(__FUNCTION__);
+	//MessageBox(__FUNCTION__);
 	ResetMenu(5);
 
 }
@@ -268,8 +276,8 @@ void CSWOTSystemView::ResetMenu(int index)
 		if(i == index){
 			continue;
 		}else{
-			if (m_mainbtn[index].GetStatus() != CButtonTriangle::Normal) {
-				m_mainbtn[index].SetStatus(CButtonTriangle::Normal);
+			if (m_mainbtn[i].GetStatus() != CButtonTriangle::Normal) {
+				m_mainbtn[i].SetStatus(CButtonTriangle::Normal);
 			}
 		}
 	} 

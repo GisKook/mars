@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include "SWOTSystem.h"
 #include "ButtonTriangle.h"
+#include "SWOTSystemDoc.h"
+#include "SWOTSystemView.h"
 
 
 // CButtonTriangle
@@ -12,11 +14,12 @@ IMPLEMENT_DYNAMIC(CButtonTriangle, CButton)
 
 CButtonTriangle::CButtonTriangle():m_status(CButtonTriangle::Normal)
 {
-
+	m_menu.CreatePopupMenu(); 
 }
 
 CButtonTriangle::~CButtonTriangle()
 {
+	m_menu.DestroyMenu();
 }
 
 
@@ -26,10 +29,6 @@ BEGIN_MESSAGE_MAP(CButtonTriangle, CButton)
 	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
-void CButtonTriangle::SetCaption( CString strCaption )
-{
-	m_strCaption = strCaption;
-}
 
 int CButtonTriangle::MoveButton( int x, int y, int fontheight )
 { 
@@ -68,8 +67,8 @@ int CButtonTriangle::MoveButton( int x, int y, int fontheight )
 	this->MoveWindow(x, y, m_size.cx, m_size.cy);
 
 	return x + m_size.cx - 2;
-
 }
+
 void CButtonTriangle::OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
@@ -96,6 +95,7 @@ void CButtonTriangle::OnNcPaint()
 
 void CButtonTriangle::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 {
+	fprintf(stdout, " %s %s %d\n", m_strCaption,__FUNCTION__, m_status);
 	// TODO:  添加您的代码以绘制指定项
 	CDC dc;
 	dc.Attach(lpDrawItemStruct->hDC);		//Get device context object
@@ -131,7 +131,7 @@ void CButtonTriangle::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	if(m_status == Normal){		
 		dc.SetTextColor(RGB(0,0,0));		// Set the color of the caption to be yellow
 		dc.DrawText(m_strCaption,rt,DT_LEFT|DT_VCENTER|DT_SINGLELINE);		// Draw out the caption				
-	}else if(m_status == SelectArrow){
+	}else if(m_status == SelectArrow || m_status == SelectArrowOff){
 		dc.SetTextColor(RGB(0,0,0));		// Set the color of the caption to be yellow
 		CBrush backbrush, *oldbackbrush;
 		backbrush.CreateSolidBrush(RGB(168,168,168));
@@ -168,21 +168,33 @@ void CButtonTriangle::OnLButtonDown(UINT nFlags, CPoint point)
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 	CRgn rgn;
 	POINT polygon[3];
-	polygon[0].x = m_triangle[0].x - 2;
-	polygon[0].y = m_triangle[0].y - 2;
-	polygon[1].x = m_triangle[1].x + 2;
-	polygon[1].y = m_triangle[1].y - 2;
+	polygon[0].x = m_triangle[0].x - 12;
+	polygon[0].y = m_triangle[0].y - 12;
+	polygon[1].x = m_triangle[1].x + 12;
+	polygon[1].y = m_triangle[1].y - 12;
 	polygon[2].x = m_triangle[2].x;
-	polygon[2].y = m_triangle[2].y + 2;
+	polygon[2].y = m_triangle[2].y + 12;
 	rgn.CreatePolygonRgn(polygon, 3, ALTERNATE);
-	if(rgn.PtInRegion(point)){
+	bool in = rgn.PtInRegion(point);
+	if(in && m_status != SelectArrow){
 		m_status = SelectArrow;
-		CButton::OnLButtonDown(nFlags, point);
-	}else{
+		CRect rc;
+		GetWindowRect(rc);
+
+		int x = rc.left;
+		int y = rc.bottom;
+		Invalidate();
+		((CSWOTSystemView*)m_parent)->ResetMenu(m_index);
+		m_menu.TrackPopupMenu(TPM_LEFTALIGN|TPM_LEFTBUTTON,x,y,m_parent);
+	}else if(in  && m_status == SelectArrow){
+		m_status = SelectArrowOff;
+	}else if(m_status != SelectText){
 		m_status = SelectText;
 	}
-	Invalidate();
 	rgn.DeleteObject();
+	
+	Invalidate();
+	CButton::OnLButtonDown(nFlags, point);
 }
 
 void CButtonTriangle::SetStatus( ButtonStatus status )
@@ -204,4 +216,18 @@ void CButtonTriangle::DrawRect( CDC *pDC, RECT &rect, COLORREF c )
 	pDC->SelectObject(oldpen);
 	pen.DeleteObject();
 	backbrush.DeleteObject();
+}
+
+BOOL CButtonTriangle::Create( LPCTSTR lpszCaption, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, int index )
+{
+	m_parent = pParentWnd;
+	m_strCaption = lpszCaption;
+	m_index = index;
+	dwStyle |= BS_OWNERDRAW; // Enforce
+	return CButton::Create(lpszCaption, dwStyle, rect, pParentWnd, nID );
+}
+
+BOOL CButtonTriangle::AddMenuItem( UINT nMenuId, const CString strMenu, UINT nMenuFlags )
+{
+	return m_menu.AppendMenu(nMenuFlags | MF_STRING, nMenuId, (LPCTSTR)strMenu); 
 }

@@ -4,6 +4,16 @@
 //
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
+#define IDMP_PROMOTION                  101
+#define IDMP_PUBLICRELATIONS            102
+#define IDMP_RECEPTION                  103
+#define IDS_CUSTOMERSERVICES            104
+#define IDMP_CUSTOMERSERVICES           104
+#define IDMP_SALES                      105
+#define IDMP_AFTERSALESSUPPORT          106
+#define IDMP_MARKETING                  107
+#define IDMP_ADVERTISING                108
+#define IDMP_PROMOTION2                 109
 #define IDR_MAINFRAME                   128
 #define IDR_SWOTSystemTYPE              129
 #define IDM_PROMOTION                   130
@@ -11,7 +21,6 @@
 #define IDM_ADMINISTRATION              132
 #define IDM_MANAGEMENT                  133
 #define IDM_FINNACIAL                   134
-#define IDM_LEGEL                       135
 #define IDM_LEGAL                       135
 
 // Next default values for new objects
