@@ -17,6 +17,7 @@ using namespace std;
 
 // CSWOTSystemView
 const int CSWOTSystemView::m_logolen = 200;
+const int CSWOTSystemView::m_logomenugap = 30;
 IMPLEMENT_DYNCREATE(CSWOTSystemView, CView)
 
 BEGIN_MESSAGE_MAP(CSWOTSystemView, CView)
@@ -62,7 +63,14 @@ void CSWOTSystemView::OnDraw(CDC* pdc)
 	if (!pDoc)
 		return;
 	DrawLogo(pdc);
-
+	int mapmode = SetCoordinate(pdc);
+	m_chart.SetDC(pdc);
+	m_chart.DrawBackground(); 
+	m_pie.SetDC(pdc);
+	m_pie.Draw();
+	
+	
+	pdc->SetMapMode(mapmode);
 	// TODO: add draw code for native data here
 }
 
@@ -141,6 +149,25 @@ void CSWOTSystemView::OnInitialUpdate()
 	m_mainbtn[5].Create("Legal", dwStyle, CRect(0,0,0,0), this, IDM_LEGAL,5);
 	m_mainbtn[5].ModifyStyleEx( 0, WS_EX_STATICEDGE, 0);
 	x = m_mainbtn[5].MoveButton(x,0,18);
+
+	RECT rc;
+	rc.left = 100;
+	rc.right = rc.left + 1000;
+	rc.bottom = 400;
+	rc.top = 400+1000;
+	m_chart.SetBoxRect(rc);
+	
+	rc.top = rc.bottom;
+	rc.bottom = rc.bottom - 80;
+	m_chart.SetTitleRect(rc);
+
+	rc.left = rc.right + 1100;
+	rc.right = rc.left + 1000;
+	rc.top = 1400;
+	rc.bottom = 200;
+
+
+	m_pie.SetRect(rc);
 }
 
 void CSWOTSystemView::DrawLogo( CDC *pdc )
@@ -153,7 +180,7 @@ void CSWOTSystemView::DrawLogo( CDC *pdc )
 	rectbelow.bottom = m_mainbtn[0].GetHeight()*2;
 	DrawRect(pdc,&rectbelow, RGB(125,125,125));
 	rectleft = rect;
-	rectleft.right = m_logolen - 30;
+	rectleft.right = m_logolen - m_logomenugap;
 	DrawRect(pdc,&rectleft, RGB(125,125,125));
 
 	int height = m_mainbtn[0].GetHeight();
@@ -165,7 +192,7 @@ void CSWOTSystemView::DrawLogo( CDC *pdc )
 	pen.CreatePen(PS_NULL, 0, RGB(39,38,38));
 	oldpen = pdc->SelectObject(&pen);
 	RECT logorect = rect;
-	logorect.right = m_logolen - 30;
+	logorect.right = m_logolen - m_logomenugap;
 	pdc->Rectangle(&logorect);
 
 	int oldmode = pdc->SetBkMode(TRANSPARENT);
@@ -281,4 +308,14 @@ void CSWOTSystemView::ResetMenu(int index)
 			}
 		}
 	} 
+}
+
+int CSWOTSystemView::SetCoordinate(CDC *pdc)
+{
+	int mapmode = pdc->SetMapMode(MM_LOMETRIC); 
+	RECT rc;
+	this->GetClientRect(&rc); 
+	pdc->SetViewportOrg(rc.left + m_logolen - m_logomenugap, rc.bottom);
+
+	return mapmode;
 }

@@ -5,6 +5,8 @@
 #pragma once
 
 #include "ButtonTriangle.h"
+#include "Chart.h"
+#include "Pie.h"
 class CSWOTSystemView : public CView
 {
 protected: // create from serialization only
@@ -37,10 +39,15 @@ public:
 #endif
 
 private:
+	int SetCoordinate(CDC *);
 	void DrawRect(CDC *pdc, RECT * rect, COLORREF c);
 	void DrawLogo(CDC *pdc);
 private:
 	const static int m_logolen;
+	const static int m_logomenugap;
+private:
+	CChart m_chart;
+	CPie m_pie;
 
 protected:
 private:
