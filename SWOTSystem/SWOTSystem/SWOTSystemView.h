@@ -7,6 +7,7 @@
 #include "ButtonTriangle.h"
 #include "Chart.h"
 #include "Pie.h"
+#include "ViewMenu.h"
 class CSWOTSystemView : public CView
 {
 protected: // create from serialization only
@@ -48,6 +49,13 @@ private:
 private:
 	CChart m_chart;
 	CPie m_pie;
+	CViewMenu m_viemenu;
+private:
+	enum MenuStatus{
+		Promotion = 0,
+		MENUNULL = 255,
+	};
+	int m_menustatus;
 
 protected:
 private:
@@ -56,6 +64,7 @@ private:
 // Generated message map functions
 public:
 	void ResetMenu(int index);
+	void SetMenu(int index);
 protected:
 	DECLARE_MESSAGE_MAP()
 public:

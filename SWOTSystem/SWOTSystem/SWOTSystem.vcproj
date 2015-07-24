@@ -237,6 +237,10 @@
 				RelativePath=".\SWOTSystemView.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\ViewMenu.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -281,6 +285,10 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ViewMenu.h"
 				>
 			</File>
 		</Filter>

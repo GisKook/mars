@@ -185,6 +185,7 @@ void CButtonTriangle::OnLButtonDown(UINT nFlags, CPoint point)
 		int y = rc.bottom;
 		Invalidate();
 		((CSWOTSystemView*)m_parent)->ResetMenu(m_index);
+		((CSWOTSystemView*)m_parent)->SetMenu(m_index);
 		m_menu.TrackPopupMenu(TPM_LEFTALIGN|TPM_LEFTBUTTON,x,y,m_parent);
 	}else if(in  && m_status == SelectArrow){
 		m_status = SelectArrowOff;
@@ -229,5 +230,16 @@ BOOL CButtonTriangle::Create( LPCTSTR lpszCaption, DWORD dwStyle, const RECT& re
 
 BOOL CButtonTriangle::AddMenuItem( UINT nMenuId, const CString strMenu, UINT nMenuFlags )
 {
+	m_menuitem.push_back(strMenu);
 	return m_menu.AppendMenu(nMenuFlags | MF_STRING, nMenuId, (LPCTSTR)strMenu); 
+}
+
+CString CButtonTriangle::GetMenuString( int index )
+{
+	return m_menuitem[index]; 
+}
+
+int CButtonTriangle::GetMenuItemCount()
+{
+	return m_menuitem.size(); 
 }

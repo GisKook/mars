@@ -1,5 +1,5 @@
 #pragma once
-
+#include <vector>
 
 // CButtonTriangle
 
@@ -36,6 +36,8 @@ public:
 	int GetHeight(){return m_size.cy;};
 	void DrawRect(CDC *pDC, RECT &rect, COLORREF c);
 	BOOL AddMenuItem(UINT nMenuId, const CString strMenu, UINT nMenuFlags);
+	CString GetMenuString(int index);
+	int GetMenuItemCount();
 
 private:
 	CString m_strCaption;
@@ -45,6 +47,7 @@ private:
 	int m_status;
 	CWnd * m_parent;
 	int m_index;
+	std::vector<CString> m_menuitem;
 
 	static const CString m_fontname;
 public:

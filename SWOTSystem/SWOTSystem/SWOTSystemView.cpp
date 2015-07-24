@@ -16,7 +16,7 @@ using namespace std;
 
 
 // CSWOTSystemView
-const int CSWOTSystemView::m_logolen = 200;
+const int CSWOTSystemView::m_logolen = 300;
 const int CSWOTSystemView::m_logomenugap = 30;
 IMPLEMENT_DYNCREATE(CSWOTSystemView, CView)
 
@@ -36,7 +36,7 @@ END_MESSAGE_MAP()
 
 // CSWOTSystemView construction/destruction
 
-CSWOTSystemView::CSWOTSystemView()
+CSWOTSystemView::CSWOTSystemView():m_menustatus(255)
 {
 	// TODO: add construction code here
 
@@ -63,12 +63,20 @@ void CSWOTSystemView::OnDraw(CDC* pdc)
 	if (!pDoc)
 		return;
 	DrawLogo(pdc);
+	if(m_menustatus == Promotion){
+		m_viemenu.SetDC(pdc);
+		m_viemenu.Draw();
+	}else{
+		DrawLogo(pdc);
+	}
+
+
 	int mapmode = SetCoordinate(pdc);
+
 	m_chart.SetDC(pdc);
 	m_chart.DrawBackground(); 
 	m_pie.SetDC(pdc);
 	m_pie.Draw();
-	
 	
 	pdc->SetMapMode(mapmode);
 	// TODO: add draw code for native data here
@@ -151,7 +159,7 @@ void CSWOTSystemView::OnInitialUpdate()
 	x = m_mainbtn[5].MoveButton(x,0,18);
 
 	RECT rc;
-	rc.left = 100;
+	rc.left = 100 + m_logolen + 600;
 	rc.right = rc.left + 1000;
 	rc.bottom = 400;
 	rc.top = 400+1000;
@@ -161,7 +169,7 @@ void CSWOTSystemView::OnInitialUpdate()
 	rc.bottom = rc.bottom - 80;
 	m_chart.SetTitleRect(rc);
 
-	rc.left = rc.right + 1100;
+	rc.left = rc.right + 300;
 	rc.right = rc.left + 1000;
 	rc.top = 1400;
 	rc.bottom = 200;
@@ -257,41 +265,46 @@ void CSWOTSystemView::OnPromotion()
 {
 	//MessageBox(__FUNCTION__);
 	ResetMenu(0);
+	m_viemenu.Clear();
+	RECT rc;
+	rc.left = 0;
+	rc.top = m_mainbtn[0].GetHeight()*2;
+	rc.right = 200;
+	rc.bottom = 200;
+	m_viemenu.SetRect(rc);
+
+	SetMenu(0);
 }
 
 void CSWOTSystemView::OnProduction()
 {
 	//MessageBox(__FUNCTION__);
 	ResetMenu(1);
-
+	SetMenu(1);
 }
 
 void CSWOTSystemView::OnAdministration()
 {
 	//MessageBox(__FUNCTION__);
 	ResetMenu(2);
-
 }
 
 void CSWOTSystemView::OnManagement()
 {
 	//MessageBox(__FUNCTION__);
 	ResetMenu(3);
-
 }
 
 void CSWOTSystemView::OnFinnacial()
 {
 	//MessageBox(__FUNCTION__);
 	ResetMenu(4);
-
 }
 
 void CSWOTSystemView::OnLegal()
 {
 	//MessageBox(__FUNCTION__);
 	ResetMenu(5);
-
 }
 
 void CSWOTSystemView::ResetMenu(int index)
@@ -315,7 +328,25 @@ int CSWOTSystemView::SetCoordinate(CDC *pdc)
 	int mapmode = pdc->SetMapMode(MM_LOMETRIC); 
 	RECT rc;
 	this->GetClientRect(&rc); 
-	pdc->SetViewportOrg(rc.left + m_logolen - m_logomenugap, rc.bottom);
+	pdc->SetViewportOrg(rc.left /*+ m_logolen - m_logomenugap*/, rc.bottom);
 
 	return mapmode;
+}
+
+void CSWOTSystemView::SetMenu( int index )
+{
+	if(m_mainbtn[index].GetStatus() == CButtonTriangle::SelectText){
+		int itemcount = m_mainbtn[index].GetMenuItemCount();
+		for(int i = 0; i < itemcount; ++i){
+			m_viemenu.AddMenuItem(m_mainbtn[index].GetMenuString(i));
+		}
+		
+		m_menustatus = index;
+	}else{
+		m_menustatus = MENUNULL;
+	}
+	RECT rc;
+	GetClientRect(&rc);
+	rc.right = m_logolen; 
+	InvalidateRect(&rc);
 }
