@@ -35,6 +35,7 @@ void CChart::DrawBackground()
 	rc.right += 6;
 	DrawRect(m_dc, rc, RGB(219,127,46));
 	DrawArraw();
+	DrawTile(m_title);
 }
 
 void CChart::DrawRect(CDC *pDC, RECT &rect, COLORREF c)
@@ -175,6 +176,45 @@ void CChart::DrawFont( CString str, RECT rc, int fontsize, CString fontname, COL
 
 void CChart::DrawTile( CString str )
 { 
-	int fontsize = (m_recttitle.top - m_recttitle.bottom) / 3;
+	int fontsize = (m_recttitle.top - m_recttitle.bottom);
 	DrawFont(str, m_recttitle, fontsize, "Microsoft YaHei", RGB(0,0,0), FW_BOLD);
+}
+
+void CChart::SetTitle( CString title )
+{
+	m_title = title;
+}
+
+void CChart::DrawHistogram( HistogramParam * p )
+{ 
+	if(p == NULL){
+		return ;
+	}
+	RECT rc;
+	for (int i = 0; i < p->count; i++) {
+		rc = GetHistoGram(p->count, p->height[i], i);
+		DrawRect(m_dc, rc, p->color[i]);
+	}
+}
+
+RECT CChart::GetHistoGram( int count, int height, int index) { 
+	RECT result;
+	int width = (m_rectbox.right - m_rectbox.left)/count;
+	result.left = m_rectbox.left + index*width;
+	result.right = result.left + width;
+	result.bottom = m_rectbox.bottom;
+	result.top = result.bottom + height;
+
+	return result;
+}
+
+int CChart::Hittest( POINT p )
+{
+	RECT rect = m_rectbox; 
+	rect.top = rect.bottom + (rect.top - rect.bottom)/2;
+	if(p.x > rect.left && p.x < rect.right && p.y > rect.bottom && p.y < rect.top){
+		return PROMOTION;
+	}
+
+	return HTSNULL;
 }

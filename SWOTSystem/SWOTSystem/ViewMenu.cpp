@@ -40,12 +40,12 @@ void CViewMenu::Draw()
 	 
 	rc = GetRect(m_rectmenu, itemcount, 0);
 	rc.left += 10;
-	DrawFont(m_menuitem[0], rc, rc.bottom - rc.top, "Microsoft YaHei", RGB(0,0,0), FW_BOLD);
+	DrawFont(m_menuitem[0], rc, (rc.bottom - rc.top)/2, "Microsoft YaHei", RGB(0,0,0), FW_BOLD);
 
 	for(int i=1; i < itemcount; i++){
 		rc = GetRect(m_rectmenu, itemcount, i);
 		rc.left += 10;
-		DrawFont(m_menuitem[i], rc, rc.bottom - rc.top, "Microsoft YaHei", RGB(0,0,0), FW_NORMAL);
+		DrawFont(m_menuitem[i], rc, (rc.bottom - rc.top)/2, "Microsoft YaHei", RGB(0,0,0), FW_NORMAL);
 	}
 }
 

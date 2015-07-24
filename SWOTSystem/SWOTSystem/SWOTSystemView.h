@@ -8,6 +8,7 @@
 #include "Chart.h"
 #include "Pie.h"
 #include "ViewMenu.h"
+#include <vector>
 class CSWOTSystemView : public CView
 {
 protected: // create from serialization only
@@ -47,6 +48,10 @@ private:
 	const static int m_logolen;
 	const static int m_logomenugap;
 private:
+	CChart::HistogramParam *m_hp;
+	std::vector<CChart::HistogramParam *>m_histroy;
+
+private:
 	CChart m_chart;
 	CPie m_pie;
 	CViewMenu m_viemenu;
@@ -56,6 +61,15 @@ private:
 		MENUNULL = 255,
 	};
 	int m_menustatus;
+
+private:
+	void GetScale(CDC *pdc);
+	int m_dpix;
+	int m_dpiy;
+	RECT m_clientrect;
+	double m_scalex;
+	double m_scaley;
+	POINT ConvertPoint(POINT pt);
 
 protected:
 private:
@@ -75,6 +89,7 @@ public:
 	afx_msg void OnManagement();
 	afx_msg void OnFinnacial();
 	afx_msg void OnLegal();
+	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // debug version in SWOTSystemView.cpp

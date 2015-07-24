@@ -32,11 +32,12 @@ BEGIN_MESSAGE_MAP(CSWOTSystemView, CView)
 	ON_BN_CLICKED(IDM_MANAGEMENT, &CSWOTSystemView::OnManagement)
 	ON_BN_CLICKED(IDM_FINNACIAL, &CSWOTSystemView::OnFinnacial)
 	ON_BN_CLICKED(IDM_LEGAL, &CSWOTSystemView::OnLegal)
+	ON_WM_LBUTTONDBLCLK()
 END_MESSAGE_MAP()
 
 // CSWOTSystemView construction/destruction
 
-CSWOTSystemView::CSWOTSystemView():m_menustatus(255)
+CSWOTSystemView::CSWOTSystemView():m_menustatus(255), m_hp(NULL),m_scalex(0), m_scaley(0)
 {
 	// TODO: add construction code here
 
@@ -63,6 +64,7 @@ void CSWOTSystemView::OnDraw(CDC* pdc)
 	if (!pDoc)
 		return;
 	DrawLogo(pdc);
+	GetScale(pdc);
 	if(m_menustatus == Promotion){
 		m_viemenu.SetDC(pdc);
 		m_viemenu.Draw();
@@ -70,10 +72,10 @@ void CSWOTSystemView::OnDraw(CDC* pdc)
 		DrawLogo(pdc);
 	}
 
-
 	int mapmode = SetCoordinate(pdc);
 
 	m_chart.SetDC(pdc);
+	m_chart.DrawHistogram(m_hp);
 	m_chart.DrawBackground(); 
 	m_pie.SetDC(pdc);
 	m_pie.Draw();
@@ -176,6 +178,8 @@ void CSWOTSystemView::OnInitialUpdate()
 
 
 	m_pie.SetRect(rc);
+
+	
 }
 
 void CSWOTSystemView::DrawLogo( CDC *pdc )
@@ -257,7 +261,30 @@ void CSWOTSystemView::DrawRect( CDC *pDC, RECT * rect, COLORREF c )
 void CSWOTSystemView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-
+	MSG message;
+	int dbclktime = GetDoubleClickTime();
+	DWORD st = GetTickCount();
+	while(1)
+	{
+		if(::PeekMessage(&message, NULL, 0 ,0 , PM_REMOVE))
+		{
+			::TranslateMessage(&message);
+			::DispatchMessage(&message);
+			if(message.message == WM_LBUTTONDBLCLK)
+				return;
+		}
+		DWORD et = GetTickCount();
+		if(et - st > 200){
+			printf("click\n");
+			break;
+		}
+		CView::OnLButtonDown(nFlags, point);
+	}
+	if( CChart::HTSNULL != m_chart.Hittest(ConvertPoint(point))){
+		printf("hit");
+	}else{
+		printf("not hit");
+	}
 	CView::OnLButtonDown(nFlags, point);
 }
 
@@ -267,11 +294,22 @@ void CSWOTSystemView::OnPromotion()
 	ResetMenu(0);
 	m_viemenu.Clear();
 	RECT rc;
-	rc.left = 0;
+	const int gap = 10;
+	rc.left = gap;
+	rc.right = rc.left + (m_logolen - m_logomenugap - gap * 2);
 	rc.top = m_mainbtn[0].GetHeight()*2;
-	rc.right = 200;
-	rc.bottom = 200;
+	rc.bottom = rc.top + m_mainbtn[0].GetMenuItemCount()*40;
 	m_viemenu.SetRect(rc);
+
+	m_chart.SetTitle("P R O M O T I O N");
+	m_hp = (CChart::HistogramParam *)malloc(sizeof(CChart::HistogramParam));
+	memset(m_hp, 0, sizeof(CChart::HistogramParam));
+	m_hp->count = 1;
+	m_hp->height[0] = m_chart.GetBoxHeight()/2;
+	m_hp->color[0] = RGB(226,152,88);
+	m_histroy.push_back(m_hp);
+		
+	Invalidate();
 
 	SetMenu(0);
 }
@@ -349,4 +387,39 @@ void CSWOTSystemView::SetMenu( int index )
 	GetClientRect(&rc);
 	rc.right = m_logolen; 
 	InvalidateRect(&rc);
+}
+
+void CSWOTSystemView::OnLButtonDblClk(UINT nFlags, CPoint point)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	
+	printf("dbclick\n");
+	CView::OnLButtonDblClk(nFlags, point);
+}
+
+void CSWOTSystemView::GetScale( CDC *dc )
+{
+	// pixels count
+//	int pagecx=dc->GetDeviceCaps(HORZRES);
+//	int pagecy=dc->GetDeviceCaps(VERTRES);
+
+	// dpi
+	m_dpix = dc->GetDeviceCaps(LOGPIXELSX);
+	m_dpiy = dc->GetDeviceCaps(LOGPIXELSY);
+	GetClientRect(&m_clientrect);
+}
+
+POINT CSWOTSystemView::ConvertPoint( POINT pt )
+{ 
+	int height = m_clientrect.bottom - m_clientrect.top;
+	int width = m_clientrect.right - m_clientrect.left;
+	int x = pt.x;
+	int y = height - pt.y;
+	
+	
+	POINT result;
+	result.x = 254*x/m_dpix;
+	result.y = 254*y/m_dpiy;
+
+	return result;
 }
