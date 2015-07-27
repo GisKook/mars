@@ -79,7 +79,7 @@ void CSWOTSystemView::OnDraw(CDC* pdc)
 	m_chart.DrawBackground(); 
 	m_pie.SetDC(pdc);
 	m_pie.Draw();
-	
+
 	pdc->SetMapMode(mapmode);
 	// TODO: add draw code for native data here
 }
@@ -166,7 +166,7 @@ void CSWOTSystemView::OnInitialUpdate()
 	rc.bottom = 400;
 	rc.top = 400+1000;
 	m_chart.SetBoxRect(rc);
-	
+
 	rc.top = rc.bottom;
 	rc.bottom = rc.bottom - 80;
 	m_chart.SetTitleRect(rc);
@@ -179,7 +179,7 @@ void CSWOTSystemView::OnInitialUpdate()
 
 	m_pie.SetRect(rc);
 
-	
+
 }
 
 void CSWOTSystemView::DrawLogo( CDC *pdc )
@@ -208,7 +208,7 @@ void CSWOTSystemView::DrawLogo( CDC *pdc )
 	pdc->Rectangle(&logorect);
 
 	int oldmode = pdc->SetBkMode(TRANSPARENT);
-	
+
 	CFont font, *oldfont;
 	font.CreateFont(19,
 		0, // nWidth 
@@ -225,7 +225,7 @@ void CSWOTSystemView::DrawLogo( CDC *pdc )
 		DEFAULT_PITCH | FF_SWISS, // nPitchAndFamily 
 		"Microsoft YaHei");
 	oldfont = pdc->SelectObject(&font);
-	
+
 	COLORREF oldtxtcolor = pdc->SetTextColor(RGB(255,255,255));		// Set the color of the caption to be yellow
 	pdc->DrawText("S W O T  P R O F I L E", &logorect, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 	pdc->SelectObject(oldfont);
@@ -275,15 +275,34 @@ void CSWOTSystemView::OnLButtonDown(UINT nFlags, CPoint point)
 		}
 		DWORD et = GetTickCount();
 		if(et - st > 200){
-			printf("click\n");
 			break;
 		}
 		CView::OnLButtonDown(nFlags, point);
 	}
-	if( CChart::HTSNULL != m_chart.Hittest(ConvertPoint(point))){
-		printf("hit");
-	}else{
-		printf("not hit");
+	if( CChart::PROMOTION == m_chart.Hittest(ConvertPoint(point)) && m_menustatus == Promotion){ 
+		m_hp = new CChart::HistogramParam;
+		m_hp->count = 3;
+
+		m_hp->height[0] = m_chart.GetBoxHeight()*10/16;
+		m_hp->color[0] = RGB(247,229,213);
+		m_hp->height[1] = m_chart.GetBoxHeight()*7/20;
+		m_hp->color[1] = RGB(240,203,171);
+		m_hp->height[2] = m_chart.GetBoxHeight()*16/20;
+		m_hp->color[2] = RGB(233,178,130);
+
+		m_histroy.push_back(m_hp);
+		InvalidateRectEx(m_chart.m_rectbox);
+	}else if(CChart::TITLEMID == m_chart.Hittest(ConvertPoint(point)) && m_menustatus == Promotion){
+		m_hp = new CChart::HistogramParam;
+		m_hp->count = 1;
+		m_hp->height[0] = m_chart.GetBoxHeight()/2;
+		m_hp->color[0] = RGB(226,152,88);
+		m_histroy.push_back(m_hp);
+
+		InvalidateRectEx(m_chart.m_rectbox);
+	}
+	else{
+		printf("not hit\n");
 	}
 	CView::OnLButtonDown(nFlags, point);
 }
@@ -292,24 +311,27 @@ void CSWOTSystemView::OnPromotion()
 {
 	//MessageBox(__FUNCTION__);
 	ResetMenu(0);
-	m_viemenu.Clear();
-	RECT rc;
-	const int gap = 10;
-	rc.left = gap;
-	rc.right = rc.left + (m_logolen - m_logomenugap - gap * 2);
-	rc.top = m_mainbtn[0].GetHeight()*2;
-	rc.bottom = rc.top + m_mainbtn[0].GetMenuItemCount()*40;
-	m_viemenu.SetRect(rc);
+	if(m_mainbtn[0].GetStatus() == CButtonTriangle::SelectText){
+		m_viemenu.Clear();
+		RECT rc;
+		const int gap = 10;
+		rc.left = gap;
+		rc.right = rc.left + (m_logolen - m_logomenugap - gap * 2);
+		rc.top = m_mainbtn[0].GetHeight()*2;
+		rc.bottom = rc.top + m_mainbtn[0].GetMenuItemCount()*40;
+		m_viemenu.SetRect(rc);
 
-	m_chart.SetTitle("P R O M O T I O N");
-	m_hp = (CChart::HistogramParam *)malloc(sizeof(CChart::HistogramParam));
-	memset(m_hp, 0, sizeof(CChart::HistogramParam));
-	m_hp->count = 1;
-	m_hp->height[0] = m_chart.GetBoxHeight()/2;
-	m_hp->color[0] = RGB(226,152,88);
-	m_histroy.push_back(m_hp);
-		
-	Invalidate();
+		m_chart.SetTitle("P R O M O T I O N");
+		m_hp = new CChart::HistogramParam;
+		m_hp->count = 1;
+		m_hp->height[0] = m_chart.GetBoxHeight()/2;
+		m_hp->color[0] = RGB(226,152,88);
+		m_histroy.push_back(m_hp);
+
+		rc = m_chart.m_rectbox;
+		rc.bottom = m_chart.m_recttitle.bottom;
+		InvalidateRectEx(rc);
+	}	
 
 	SetMenu(0);
 }
@@ -378,7 +400,7 @@ void CSWOTSystemView::SetMenu( int index )
 		for(int i = 0; i < itemcount; ++i){
 			m_viemenu.AddMenuItem(m_mainbtn[index].GetMenuString(i));
 		}
-		
+
 		m_menustatus = index;
 	}else{
 		m_menustatus = MENUNULL;
@@ -392,17 +414,52 @@ void CSWOTSystemView::SetMenu( int index )
 void CSWOTSystemView::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	
-	printf("dbclick\n");
+	if( CChart::PROMOTION == m_chart.Hittest(ConvertPoint(point)) && m_menustatus == Promotion){ 
+		m_hp = new CChart::HistogramParam;
+		m_hp->count = 8;
+
+		m_hp->height[0] = m_chart.GetBoxHeight()*15/16;
+		m_hp->color[0] = RGB(233,178,130);
+		m_hp->str[0] = "1.1";
+		m_hp->height[1] = m_chart.GetBoxHeight()*7/16;
+		m_hp->color[1] = RGB(237,191,150);
+		m_hp->str[1] = "1.2";
+		m_hp->height[2] = m_chart.GetBoxHeight()*11/16;
+		m_hp->color[2] = RGB(233,178,130);
+		m_hp->str[2] = "1.3";
+		m_hp->height[3] = m_chart.GetBoxHeight()*1/16;
+		m_hp->color[3] = RGB(237,191,150);
+		m_hp->str[3] = "1.4";
+		m_hp->height[4] = m_chart.GetBoxHeight()*6/16;
+		m_hp->color[4] = RGB(233,178,130);
+		m_hp->str[4] = "1.5";
+		m_hp->height[5] = m_chart.GetBoxHeight()*10/16;
+		m_hp->color[5] = RGB(237,191,150);
+		m_hp->str[5] = "1.6";
+		m_hp->height[6] = m_chart.GetBoxHeight()*9/16;
+		m_hp->color[6] = RGB(233,178,130);
+		m_hp->str[6] = "1.7";
+		m_hp->height[7] = m_chart.GetBoxHeight()*10/16;
+		m_hp->color[7] = RGB(237,191,150);
+		m_hp->str[7] = "1.8";
+
+		m_histroy.push_back(m_hp);
+		InvalidateRectEx(m_chart.m_rectbox);
+	}else{
+	}
 	CView::OnLButtonDblClk(nFlags, point);
 }
 
 void CSWOTSystemView::GetScale( CDC *dc )
 {
 	// pixels count
-//	int pagecx=dc->GetDeviceCaps(HORZRES);
-//	int pagecy=dc->GetDeviceCaps(VERTRES);
+	int pagecx=dc->GetDeviceCaps(HORZRES);
+	int pagecy=dc->GetDeviceCaps(VERTRES);
+	int pagesx=dc->GetDeviceCaps(HORZSIZE);
+	int pagesy=dc->GetDeviceCaps(VERTSIZE);
 
+	m_scalex = ((double)(pagesx * 10)) / (double)(pagecx);
+	m_scaley = ((double)(pagesy * 10)) / (double)(pagecy);
 	// dpi
 	m_dpix = dc->GetDeviceCaps(LOGPIXELSX);
 	m_dpiy = dc->GetDeviceCaps(LOGPIXELSY);
@@ -415,11 +472,29 @@ POINT CSWOTSystemView::ConvertPoint( POINT pt )
 	int width = m_clientrect.right - m_clientrect.left;
 	int x = pt.x;
 	int y = height - pt.y;
-	
-	
+
 	POINT result;
-	result.x = 254*x/m_dpix;
-	result.y = 254*y/m_dpiy;
+	result.x = x * m_scalex;
+	result.y = y * m_scaley;
 
 	return result;
+}
+
+void CSWOTSystemView::InvalidateRectEx( RECT &rect )
+{
+	RECT rc = rect;
+	int height = (m_clientrect.bottom - m_clientrect.top)*m_scaley;
+	int width = rect.right - rect.left;
+	rc.left /= m_scalex;
+	rc.right /= m_scalex;
+	rc.top = (height - rc.top)/m_scaley;
+	rc.bottom  = (height - rc.bottom)/m_scaley;
+	this->InvalidateRect(&rc); 
+}
+
+void CSWOTSystemView::RestChart()
+{
+	m_chart.SetTitle("");
+	m_hp = NULL;
+	m_histroy.push_back(m_hp);
 }

@@ -183,6 +183,8 @@ void CButtonTriangle::OnLButtonDown(UINT nFlags, CPoint point)
 
 		int x = rc.left;
 		int y = rc.bottom;
+		((CSWOTSystemView*)m_parent)->RestChart();
+		((CSWOTSystemView*)m_parent)->Invalidate();
 		Invalidate();
 		((CSWOTSystemView*)m_parent)->ResetMenu(m_index);
 		((CSWOTSystemView*)m_parent)->SetMenu(m_index);

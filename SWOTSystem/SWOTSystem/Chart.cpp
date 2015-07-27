@@ -64,26 +64,8 @@ void CChart::DrawPolygon( CDC * pdc, POINT *pt, int count, COLORREF c ) {
 
 void CChart::DrawArraw()
 { 
-	POINT arraw[3];
-	int arrawheight = (m_recttitle.top - m_recttitle.bottom)/2;
-	arraw[0].x = m_recttitle.left + 5;
-	arraw[0].y = m_recttitle.bottom + arrawheight;
-	arraw[1].x = arraw[0].x + arrawheight;
-	arraw[1].y = m_recttitle.top - 2;
-	arraw[2].x = arraw[0].x + arrawheight;
-	arraw[2].y = m_recttitle.bottom + 2;
-
-	DrawPolygon(m_dc, arraw, 3, RGB(0,0,0));
-
-	arraw[0].x = m_recttitle.right - 5;
-	arraw[0].y = m_recttitle.bottom + arrawheight;
-	arraw[1].x = arraw[0].x - arrawheight;
-	arraw[1].y = m_recttitle.top - 2;
-	arraw[2].x = arraw[0].x - arrawheight;
-	arraw[2].y = m_recttitle.bottom + 2;
-
-	DrawPolygon(m_dc, arraw, 3, RGB(0,0,0));
-
+	DrawPolygon(m_dc, m_leftarraw, 3, RGB(0,0,0));
+	DrawPolygon(m_dc, m_rightarraw, 3, RGB(0,0,0));
 }
 
 void CChart::DrawBox()
@@ -191,9 +173,18 @@ void CChart::DrawHistogram( HistogramParam * p )
 		return ;
 	}
 	RECT rc;
+	RECT rect;
+	int fontsize;
 	for (int i = 0; i < p->count; i++) {
 		rc = GetHistoGram(p->count, p->height[i], i);
 		DrawRect(m_dc, rc, p->color[i]);
+		if(!p->str[i].IsEmpty()){
+			rect = rc;
+			rect.top = rect.bottom + (rect.right - rect.left)/2;
+			fontsize = (rect.right - rect.left)/2;
+			DrawFont(p->str[i], rect,fontsize,"Microsoft YaHei", RGB(0,0,0));
+		}
+		
 	}
 }
 
@@ -214,7 +205,32 @@ int CChart::Hittest( POINT p )
 	rect.top = rect.bottom + (rect.top - rect.bottom)/2;
 	if(p.x > rect.left && p.x < rect.right && p.y > rect.bottom && p.y < rect.top){
 		return PROMOTION;
+	}else if(p.x > m_recttitlemid.left && p.x < m_recttitlemid.right && p.y > m_recttitlemid.bottom && p.y < m_recttitlemid.top){
+		return TITLEMID;
 	}
 
 	return HTSNULL;
+}
+
+void CChart::SetTitleRect( RECT rc )
+{
+	m_recttitle = rc; 
+	int arrawheight = (m_recttitle.top - m_recttitle.bottom)/2;
+	m_leftarraw[0].x = m_recttitle.left + 5;
+	m_leftarraw[0].y = m_recttitle.bottom + arrawheight;
+	m_leftarraw[1].x = m_leftarraw[0].x + arrawheight;
+	m_leftarraw[1].y = m_recttitle.top - 2;
+	m_leftarraw[2].x = m_leftarraw[0].x + arrawheight;
+	m_leftarraw[2].y = m_recttitle.bottom + 2;
+
+	m_rightarraw[0].x = m_recttitle.right - 5;
+	m_rightarraw[0].y = m_recttitle.bottom + arrawheight;
+	m_rightarraw[1].x = m_rightarraw[0].x - arrawheight;
+	m_rightarraw[1].y = m_recttitle.top - 2;
+	m_rightarraw[2].x = m_rightarraw[0].x - arrawheight;
+	m_rightarraw[2].y = m_recttitle.bottom + 2;
+
+	m_recttitlemid = m_recttitle;
+	m_recttitlemid.left = m_leftarraw[1].x;
+	m_recttitlemid.right = m_rightarraw[1].x;
 }

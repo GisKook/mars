@@ -45,6 +45,8 @@ private:
 	void DrawRect(CDC *pdc, RECT * rect, COLORREF c);
 	void DrawLogo(CDC *pdc);
 private:
+	void InvalidateRectEx(RECT & rect);
+private:
 	const static int m_logolen;
 	const static int m_logomenugap;
 private:
@@ -79,6 +81,7 @@ private:
 public:
 	void ResetMenu(int index);
 	void SetMenu(int index);
+	void RestChart();
 protected:
 	DECLARE_MESSAGE_MAP()
 public:
