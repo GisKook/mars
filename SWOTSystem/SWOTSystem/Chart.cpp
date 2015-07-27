@@ -11,6 +11,9 @@ CChart::~CChart(void)
 
 void CChart::DrawBackground()
 { 
+	if(m_rectbox.bottom == m_rectbox.top || m_rectbox.right == m_rectbox.left){
+		return;
+	}
 	DrawBox();
 	RECT rc = m_rectbox;
 	int subboxheight = (m_rectbox.top-m_rectbox.bottom)/4;
@@ -64,8 +67,8 @@ void CChart::DrawPolygon( CDC * pdc, POINT *pt, int count, COLORREF c ) {
 
 void CChart::DrawArraw()
 { 
-	DrawPolygon(m_dc, m_leftarraw, 3, RGB(0,0,0));
-	DrawPolygon(m_dc, m_rightarraw, 3, RGB(0,0,0));
+	DrawPolygon(m_dc, m_leftarrow, 3, RGB(0,0,0));
+	DrawPolygon(m_dc, m_rightarrow, 3, RGB(0,0,0));
 }
 
 void CChart::DrawBox()
@@ -169,6 +172,9 @@ void CChart::SetTitle( CString title )
 
 void CChart::DrawHistogram( HistogramParam * p )
 { 
+	if(m_rectbox.bottom == m_rectbox.top || m_rectbox.right == m_rectbox.left){
+		return;
+	}
 	if(p == NULL){
 		return ;
 	}
@@ -184,7 +190,6 @@ void CChart::DrawHistogram( HistogramParam * p )
 			fontsize = (rect.right - rect.left)/2;
 			DrawFont(p->str[i], rect,fontsize,"Microsoft YaHei", RGB(0,0,0));
 		}
-		
 	}
 }
 
@@ -201,12 +206,19 @@ RECT CChart::GetHistoGram( int count, int height, int index) {
 
 int CChart::Hittest( POINT p )
 {
+	CRgn leftarrow, rightarrow;
+	leftarrow.CreatePolygonRgn(m_leftarrow, 3, ALTERNATE);
+	rightarrow.CreatePolygonRgn(m_rightarrow, 3, ALTERNATE);
 	RECT rect = m_rectbox; 
 	rect.top = rect.bottom + (rect.top - rect.bottom)/2;
 	if(p.x > rect.left && p.x < rect.right && p.y > rect.bottom && p.y < rect.top){
 		return PROMOTION;
 	}else if(p.x > m_recttitlemid.left && p.x < m_recttitlemid.right && p.y > m_recttitlemid.bottom && p.y < m_recttitlemid.top){
 		return TITLEMID;
+	}else if(leftarrow.PtInRegion(p)){
+		return LEFTARROW;
+	}else if(rightarrow.PtInRegion(p)){
+		return RIGHTARROW;
 	}
 
 	return HTSNULL;
@@ -215,22 +227,23 @@ int CChart::Hittest( POINT p )
 void CChart::SetTitleRect( RECT rc )
 {
 	m_recttitle = rc; 
+	const int gap1 = 10;
 	int arrawheight = (m_recttitle.top - m_recttitle.bottom)/2;
-	m_leftarraw[0].x = m_recttitle.left + 5;
-	m_leftarraw[0].y = m_recttitle.bottom + arrawheight;
-	m_leftarraw[1].x = m_leftarraw[0].x + arrawheight;
-	m_leftarraw[1].y = m_recttitle.top - 2;
-	m_leftarraw[2].x = m_leftarraw[0].x + arrawheight;
-	m_leftarraw[2].y = m_recttitle.bottom + 2;
+	m_leftarrow[0].x = m_recttitle.left + 5;
+	m_leftarrow[0].y = m_recttitle.bottom + arrawheight;
+	m_leftarrow[1].x = m_leftarrow[0].x + arrawheight;
+	m_leftarrow[1].y = m_recttitle.top - gap1;
+	m_leftarrow[2].x = m_leftarrow[0].x + arrawheight;
+	m_leftarrow[2].y = m_recttitle.bottom + gap1;
 
-	m_rightarraw[0].x = m_recttitle.right - 5;
-	m_rightarraw[0].y = m_recttitle.bottom + arrawheight;
-	m_rightarraw[1].x = m_rightarraw[0].x - arrawheight;
-	m_rightarraw[1].y = m_recttitle.top - 2;
-	m_rightarraw[2].x = m_rightarraw[0].x - arrawheight;
-	m_rightarraw[2].y = m_recttitle.bottom + 2;
+	m_rightarrow[0].x = m_recttitle.right - 5;
+	m_rightarrow[0].y = m_recttitle.bottom + arrawheight;
+	m_rightarrow[1].x = m_rightarrow[0].x - arrawheight;
+	m_rightarrow[1].y = m_recttitle.top - gap1;
+	m_rightarrow[2].x = m_rightarrow[0].x - arrawheight;
+	m_rightarrow[2].y = m_recttitle.bottom + gap1;
 
 	m_recttitlemid = m_recttitle;
-	m_recttitlemid.left = m_leftarraw[1].x;
-	m_recttitlemid.right = m_rightarraw[1].x;
+	m_recttitlemid.left = m_leftarrow[1].x;
+	m_recttitlemid.right = m_rightarrow[1].x;
 }

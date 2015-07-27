@@ -33,11 +33,13 @@ BEGIN_MESSAGE_MAP(CSWOTSystemView, CView)
 	ON_BN_CLICKED(IDM_FINNACIAL, &CSWOTSystemView::OnFinnacial)
 	ON_BN_CLICKED(IDM_LEGAL, &CSWOTSystemView::OnLegal)
 	ON_WM_LBUTTONDBLCLK()
+	ON_COMMAND(IDMP_ADVERTISING, &CSWOTSystemView::OnPromotionAdvertising)
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 // CSWOTSystemView construction/destruction
 
-CSWOTSystemView::CSWOTSystemView():m_menustatus(255), m_hp(NULL),m_scalex(0), m_scaley(0)
+CSWOTSystemView::CSWOTSystemView():m_menustatus(255), m_hp(NULL),m_scalex(0), m_scaley(0),m_hpindex(0)
 {
 	// TODO: add construction code here
 
@@ -65,6 +67,7 @@ void CSWOTSystemView::OnDraw(CDC* pdc)
 		return;
 	DrawLogo(pdc);
 	GetScale(pdc);
+	SetRect();
 	if(m_menustatus == Promotion){
 		m_viemenu.SetDC(pdc);
 		m_viemenu.Draw();
@@ -159,26 +162,6 @@ void CSWOTSystemView::OnInitialUpdate()
 	m_mainbtn[5].Create("Legal", dwStyle, CRect(0,0,0,0), this, IDM_LEGAL,5);
 	m_mainbtn[5].ModifyStyleEx( 0, WS_EX_STATICEDGE, 0);
 	x = m_mainbtn[5].MoveButton(x,0,18);
-
-	RECT rc;
-	rc.left = 100 + m_logolen + 600;
-	rc.right = rc.left + 1000;
-	rc.bottom = 400;
-	rc.top = 400+1000;
-	m_chart.SetBoxRect(rc);
-
-	rc.top = rc.bottom;
-	rc.bottom = rc.bottom - 80;
-	m_chart.SetTitleRect(rc);
-
-	rc.left = rc.right + 300;
-	rc.right = rc.left + 1000;
-	rc.top = 1400;
-	rc.bottom = 200;
-
-
-	m_pie.SetRect(rc);
-
 
 }
 
@@ -289,19 +272,40 @@ void CSWOTSystemView::OnLButtonDown(UINT nFlags, CPoint point)
 		m_hp->color[1] = RGB(240,203,171);
 		m_hp->height[2] = m_chart.GetBoxHeight()*16/20;
 		m_hp->color[2] = RGB(233,178,130);
+		m_hp->title = m_chart.m_title;
 
 		m_histroy.push_back(m_hp);
+		m_hpindex = m_histroy.size();
 		InvalidateRectEx(m_chart.m_rectbox);
 	}else if(CChart::TITLEMID == m_chart.Hittest(ConvertPoint(point)) && m_menustatus == Promotion){
 		m_hp = new CChart::HistogramParam;
 		m_hp->count = 1;
 		m_hp->height[0] = m_chart.GetBoxHeight()/2;
 		m_hp->color[0] = RGB(226,152,88);
+		m_hp->title = m_chart.m_title;
 		m_histroy.push_back(m_hp);
+		m_hpindex  = m_histroy.size();
 
 		InvalidateRectEx(m_chart.m_rectbox);
-	}
-	else{
+	}else if(CChart::LEFTARROW == m_chart.Hittest(ConvertPoint(point))){ 
+		m_hpindex--;
+		if(m_hpindex < 0 ){
+			m_hpindex = 0;
+		}else if(m_hpindex >= m_histroy.size()){
+			m_hpindex = m_histroy.size() - 1;
+		}
+		m_hp = m_histroy[m_hpindex];
+		InvalidateRectEx(m_chart.m_rectbox);
+	}else if(CChart::RIGHTARROW == m_chart.Hittest(ConvertPoint(point))){ 
+		m_hpindex++;
+		if(m_hpindex < 0 ){
+			m_hpindex = 0;
+		}else if(m_hpindex >= m_histroy.size()){
+			m_hpindex = m_histroy.size() - 1;
+		}
+		m_hp = m_histroy[m_hpindex];
+		InvalidateRectEx(m_chart.m_rectbox);
+	}else{
 		printf("not hit\n");
 	}
 	CView::OnLButtonDown(nFlags, point);
@@ -326,7 +330,9 @@ void CSWOTSystemView::OnPromotion()
 		m_hp->count = 1;
 		m_hp->height[0] = m_chart.GetBoxHeight()/2;
 		m_hp->color[0] = RGB(226,152,88);
+		m_hp->title = m_chart.m_title;
 		m_histroy.push_back(m_hp);
+		m_hpindex = m_histroy.size();
 
 		rc = m_chart.m_rectbox;
 		rc.bottom = m_chart.m_recttitle.bottom;
@@ -443,7 +449,10 @@ void CSWOTSystemView::OnLButtonDblClk(UINT nFlags, CPoint point)
 		m_hp->color[7] = RGB(237,191,150);
 		m_hp->str[7] = "1.8";
 
+		m_hp->title = m_chart.m_title;
+
 		m_histroy.push_back(m_hp);
+		m_hpindex  = m_histroy.size();
 		InvalidateRectEx(m_chart.m_rectbox);
 	}else{
 	}
@@ -495,6 +504,106 @@ void CSWOTSystemView::InvalidateRectEx( RECT &rect )
 void CSWOTSystemView::RestChart()
 {
 	m_chart.SetTitle("");
-	m_hp = NULL;
+	m_hp = new CChart::HistogramParam;
+	m_hp->count = 0;
+	m_hp->title = m_chart.m_title;
 	m_histroy.push_back(m_hp);
+	m_hpindex = m_histroy.size();
+}
+
+void CSWOTSystemView::OnPromotionAdvertising()
+{ 
+	m_menustatus = Promotion;
+	m_viemenu.Clear();
+	
+	m_viemenu.AddMenuItem("1.7   ADVERTISING");
+	m_viemenu.AddMenuItem("1.7.1 Brief");
+	m_viemenu.AddMenuItem("1.7.2 Research");
+	m_viemenu.AddMenuItem("1.7.3 Creative");
+	m_viemenu.AddMenuItem("1.7.4 Media production");
+	m_viemenu.AddMenuItem("1.7.5 Media placement");
+
+	RECT rc;
+	const int gap = 10;
+	rc.left = gap;
+	rc.right = rc.left + (m_logolen - m_logomenugap - gap * 2);
+	rc.top = m_mainbtn[0].GetHeight()*2;
+	rc.bottom = rc.top + m_viemenu.GetItemCount()*40;
+	m_viemenu.SetRect(rc);
+
+	m_hp = new CChart::HistogramParam;
+	m_hp->color[0] = RGB(226,152, 88);
+	m_hp->count = 1;
+	m_hp->height[0] = m_chart.GetBoxHeight()*7/10;
+	m_hp->title = "1.7 A D V E R T I S I N G";
+	m_chart.SetTitle("1.7 A D V E R T I S I N G");
+	m_histroy.push_back(m_hp);
+	m_hpindex ++;
+	Invalidate();
+}
+
+void CSWOTSystemView::OnSize(UINT nType, int cx, int cy)
+{
+	CView::OnSize(nType, cx, cy);
+	// TODO: 在此处添加消息处理程序代码
+	//SetRect();
+}
+
+RECT CSWOTSystemView::ConvertRect( RECT & rect )
+{
+	RECT result;
+	int height = m_clientrect.bottom - m_clientrect.top;
+	int width = m_clientrect.right - m_clientrect.left; 
+	result.left = rect.left * m_scalex;
+	result.right = rect.right * m_scalex;
+	result.top = (height - rect.top) * m_scaley;
+	result.bottom = (height - rect.bottom) * m_scaley;
+
+	return result;
+}
+
+void CSWOTSystemView::SetRect()
+{
+	if(m_scalex < 0.0001 && m_scalex > -0.0001 && m_scaley < 0.0001 && m_scaley > -0.0001){
+		return ;
+	}
+	RECT rect;
+	GetClientRect(&rect);
+	RECT chart, charttitle, pie, rectview;
+
+	rectview = rect;
+	rectview.left = rect.left + m_logolen;
+	rectview.top = rect.top + m_mainbtn[0].GetHeight()*2;
+
+	chart = rectview;
+	pie = rectview;
+
+	int topgap = 30, sidegap = 30, charttitleheight = 30;
+	chart.left += sidegap;
+	chart.top += topgap;
+	chart.right = rectview.left + (rectview.right - rectview.left)/2-sidegap;
+	chart.bottom -= charttitleheight;
+
+	pie.left = chart.right + 20;
+	pie.top += topgap;
+	pie.right -= sidegap;
+	//pie.bottom -= charttitleheight;
+
+
+	if(chart.right - chart.left > chart.bottom - chart.top){
+		chart.right = chart.left + chart.bottom - chart.top;
+	}else{
+		chart.bottom = chart.top + chart.right - chart.left;
+	}
+	charttitle = chart;
+	charttitle.top = chart.bottom;
+	charttitle.bottom = charttitle.top + charttitleheight;
+
+
+	rect = ConvertRect(pie);
+	m_pie.SetRect(rect);
+	rect = ConvertRect(chart);
+	m_chart.SetBoxRect(rect);
+	rect = ConvertRect(charttitle);
+	m_chart.SetTitleRect(rect);
 }

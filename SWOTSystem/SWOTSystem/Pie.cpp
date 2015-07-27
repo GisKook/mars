@@ -128,6 +128,9 @@ void CPie::DrawPie( CRect rect,int anglestart, int angleend, COLORREF c )
 
 void CPie::Draw()
 {
+	if(m_rectbackground.left == m_rectbackground.right || m_rectbackground.top == m_rectbackground.bottom){
+		return;
+	}
 	DrawBackground();
 	RECT backcirclerect = m_rectmaxcircle;
 	ZoomInRect(backcirclerect, m_ringwidth);

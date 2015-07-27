@@ -46,11 +46,13 @@ private:
 	void DrawLogo(CDC *pdc);
 private:
 	void InvalidateRectEx(RECT & rect);
+	RECT ConvertRect(RECT & rect);
 private:
 	const static int m_logolen;
 	const static int m_logomenugap;
 private:
 	CChart::HistogramParam *m_hp;
+	int m_hpindex;
 	std::vector<CChart::HistogramParam *>m_histroy;
 
 private:
@@ -73,6 +75,8 @@ private:
 	double m_scaley;
 	POINT ConvertPoint(POINT pt);
 
+	void SetRect();
+
 protected:
 private:
 	CButtonTriangle m_mainbtn[6];
@@ -93,6 +97,8 @@ public:
 	afx_msg void OnFinnacial();
 	afx_msg void OnLegal();
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+	afx_msg void OnPromotionAdvertising();
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };
 
 #ifndef _DEBUG  // debug version in SWOTSystemView.cpp

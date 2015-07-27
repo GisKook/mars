@@ -12,6 +12,7 @@ public:
 	void AddMenuItem(CString str);
 	void Clear();
 	void Draw();
+	int GetItemCount(){return m_menuitem.size();}
 private:
 	void DrawRect(CDC*, RECT &, COLORREF c);
 	RECT GetRect(RECT & rc, int count, int index);

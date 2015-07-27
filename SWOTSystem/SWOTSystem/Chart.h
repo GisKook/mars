@@ -11,6 +11,7 @@ public:
 		COLORREF color[32];
 		int height[32];
 		CString str[32];
+		CString title;
 		void HistogramParam(){
 			count = 0;
 			memset(color, 0, sizeof(color));
@@ -21,6 +22,8 @@ public:
 		HTSNULL = 0,
 		PROMOTION = 1,
 		TITLEMID = 2,
+		LEFTARROW = 3,
+		RIGHTARROW = 4,
 	};
 public: 
 	void SetBoxRect(RECT rc){m_rectbox = rc;};
@@ -48,6 +51,6 @@ public:
 	RECT m_rectbox;
 	RECT m_recttitle;
 	RECT m_recttitlemid;
-	POINT m_leftarraw[3];
-	POINT m_rightarraw[3];
+	POINT m_leftarrow[3];
+	POINT m_rightarrow[3];
 };
