@@ -8,8 +8,9 @@
 #include "SWOTSystemView.h"
 
 
+extern const char * g_fontname;
 // CButtonTriangle
-const CString CButtonTriangle::m_fontname = "Microsoft YaHei";
+const CString CButtonTriangle::m_fontname = g_fontname;
 IMPLEMENT_DYNAMIC(CButtonTriangle, CButton)
 
 CButtonTriangle::CButtonTriangle():m_status(CButtonTriangle::Normal)
@@ -95,7 +96,6 @@ void CButtonTriangle::OnNcPaint()
 
 void CButtonTriangle::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 {
-	fprintf(stdout, " %s %s %d\n", m_strCaption,__FUNCTION__, m_status);
 	// TODO:  添加您的代码以绘制指定项
 	CDC dc;
 	dc.Attach(lpDrawItemStruct->hDC);		//Get device context object

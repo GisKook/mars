@@ -16,8 +16,9 @@ using namespace std;
 
 
 // CSWOTSystemView
-const int CSWOTSystemView::m_logolen = 300;
-const int CSWOTSystemView::m_logomenugap = 30;
+const int CSWOTSystemView::m_logolen = 200;
+const int CSWOTSystemView::m_logomenugap = 15;
+const char * g_fontname = "Arial";
 IMPLEMENT_DYNCREATE(CSWOTSystemView, CView)
 
 BEGIN_MESSAGE_MAP(CSWOTSystemView, CView)
@@ -39,10 +40,14 @@ END_MESSAGE_MAP()
 
 // CSWOTSystemView construction/destruction
 
-CSWOTSystemView::CSWOTSystemView():m_menustatus(255), m_hp(NULL),m_scalex(0), m_scaley(0),m_hpindex(0)
+CSWOTSystemView::CSWOTSystemView():m_menustatus(255), m_scalex(0), m_scaley(0),m_topheight(0)
 {
 	// TODO: add construction code here
-
+	m_hp = new CChart::HistogramParam;
+	m_hp->count = 0; 
+	m_hp->title = "";
+	m_histroy.push_back(m_hp);
+	m_hpindex = 1;
 }
 
 CSWOTSystemView::~CSWOTSystemView()
@@ -129,10 +134,13 @@ CSWOTSystemDoc* CSWOTSystemView::GetDocument() const // non-debug version is inl
 void CSWOTSystemView::OnInitialUpdate()
 { 
 	int x = m_logolen;
+	int fontsize = 18;
 	DWORD dwStyle = ( WS_VISIBLE | BS_FLAT | BS_LEFT | BS_OWNERDRAW ) & ~WS_BORDER & ~WS_DLGFRAME;
 	m_mainbtn[0].Create("Promotion", dwStyle, CRect(0,0,0,0), this, IDM_PROMOTION, 0);
 	m_mainbtn[0].ModifyStyleEx( 0, WS_EX_STATICEDGE, 0);
-	x = m_mainbtn[0].MoveButton(x,0,18);
+	m_mainbtn[0].MoveButton(x,0,fontsize);
+	m_topheight = m_mainbtn[0].GetHeight()*2;
+	x = m_mainbtn[0].MoveButton(x,m_topheight,fontsize);
 	m_mainbtn[0].AddMenuItem(IDMP_PROMOTION, "1.   Promotion", 0);
 	m_mainbtn[0].AddMenuItem(IDMP_PUBLICRELATIONS, "1.1 Public relations(PR)", 0);
 	m_mainbtn[0].AddMenuItem(IDMP_RECEPTION, "1.2 Reception", 0);
@@ -145,41 +153,43 @@ void CSWOTSystemView::OnInitialUpdate()
 
 	m_mainbtn[1].Create("Production", dwStyle, CRect(0,0,0,0), this, IDM_PRODUCTION, 1);
 	m_mainbtn[1].ModifyStyleEx( 0, WS_EX_STATICEDGE, 0);
-	x = m_mainbtn[1].MoveButton(x,0,18);
+	x = m_mainbtn[1].MoveButton(x,m_topheight,fontsize);
 
 	m_mainbtn[2].Create("Administration", dwStyle, CRect(0,0,0,0), this, IDM_ADMINISTRATION, 2);
 	m_mainbtn[2].ModifyStyleEx( 0, WS_EX_STATICEDGE, 0);
-	x = m_mainbtn[2].MoveButton(x,0,18);
+	x = m_mainbtn[2].MoveButton(x,m_topheight,fontsize);
 
 	m_mainbtn[3].Create("Management", dwStyle, CRect(0,0,0,0), this, IDM_MANAGEMENT, 3);
 	m_mainbtn[3].ModifyStyleEx( 0, WS_EX_STATICEDGE, 0);
-	x = m_mainbtn[3].MoveButton(x,0,18);
+	x = m_mainbtn[3].MoveButton(x,m_topheight,fontsize);
 
 	m_mainbtn[4].Create("Finnacial", dwStyle, CRect(0,0,0,0), this, IDM_FINNACIAL, 4);
 	m_mainbtn[4].ModifyStyleEx( 0, WS_EX_STATICEDGE, 0);
-	x = m_mainbtn[4].MoveButton(x,0,18);
+	x = m_mainbtn[4].MoveButton(x,m_topheight,fontsize);
 
 	m_mainbtn[5].Create("Legal", dwStyle, CRect(0,0,0,0), this, IDM_LEGAL,5);
 	m_mainbtn[5].ModifyStyleEx( 0, WS_EX_STATICEDGE, 0);
-	x = m_mainbtn[5].MoveButton(x,0,18);
+	x = m_mainbtn[5].MoveButton(x,m_topheight,fontsize);
 
 }
 
 void CSWOTSystemView::DrawLogo( CDC *pdc )
 { 
-	RECT rect, rectbelow, rectleft;
+	RECT rect, rectbelow, rectleft,recttop;
 	GetClientRect(&rect);
 	DrawRect(pdc,&rect,RGB(255,255,255));
 	rectbelow = rect;
-	rectbelow.top = m_mainbtn[0].GetHeight() - 1;
-	rectbelow.bottom = m_mainbtn[0].GetHeight()*2;
+	rectbelow.top = m_mainbtn[0].GetHeight() - 1 + m_topheight;
+	rectbelow.bottom = m_mainbtn[0].GetHeight()*2+m_topheight;
 	DrawRect(pdc,&rectbelow, RGB(125,125,125));
+	recttop = rect;
+	recttop.bottom = m_topheight;
+	DrawRect(pdc,&recttop, RGB(211,211,211));
 	rectleft = rect;
+	rectleft.top = m_topheight;
 	rectleft.right = m_logolen - m_logomenugap;
 	DrawRect(pdc,&rectleft, RGB(125,125,125));
 
-	int height = m_mainbtn[0].GetHeight();
-	rect.bottom = height;
 	CBrush brush, *oldbrush;
 	brush.CreateSolidBrush(RGB(39,38,38)); 
 	oldbrush = pdc->SelectObject(&brush);
@@ -187,13 +197,15 @@ void CSWOTSystemView::DrawLogo( CDC *pdc )
 	pen.CreatePen(PS_NULL, 0, RGB(39,38,38));
 	oldpen = pdc->SelectObject(&pen);
 	RECT logorect = rect;
+	logorect.top = m_topheight-1;
 	logorect.right = m_logolen - m_logomenugap;
+	logorect.bottom = logorect.top + m_mainbtn[0].GetHeight();
 	pdc->Rectangle(&logorect);
 
 	int oldmode = pdc->SetBkMode(TRANSPARENT);
 
 	CFont font, *oldfont;
-	font.CreateFont(19,
+	font.CreateFont(m_mainbtn[0].GetHeight()*0.7,
 		0, // nWidth 
 		0, // nEscapement 
 		0, // nOrientation 
@@ -206,13 +218,34 @@ void CSWOTSystemView::DrawLogo( CDC *pdc )
 		CLIP_DEFAULT_PRECIS, // nClipPrecision 
 		DEFAULT_QUALITY, // nQuality 
 		DEFAULT_PITCH | FF_SWISS, // nPitchAndFamily 
-		"Microsoft YaHei");
+		g_fontname);
 	oldfont = pdc->SelectObject(&font);
 
 	COLORREF oldtxtcolor = pdc->SetTextColor(RGB(255,255,255));		// Set the color of the caption to be yellow
 	pdc->DrawText("S W O T  P R O F I L E", &logorect, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+
+	CFont fonttop;
+	fonttop.CreateFont(m_topheight/2,
+		0, // nWidth 
+		0, // nEscapement 
+		0, // nOrientation 
+		FW_BOLD, // nWeight 
+		FALSE, // bItalic 
+		FALSE, // bUnderline 
+		0, // cStrikeOut 
+		ANSI_CHARSET, // nCharSet 
+		OUT_DEFAULT_PRECIS, // nOutPrecision 
+		CLIP_DEFAULT_PRECIS, // nClipPrecision 
+		DEFAULT_QUALITY, // nQuality 
+		DEFAULT_PITCH | FF_SWISS, // nPitchAndFamily 
+		g_fontname);
+	pdc->SelectObject(&fonttop);
+	pdc->SetTextColor(RGB(0,0,0));		// Set the color of the caption to be yellow
+	recttop.left += 10;
+	pdc->DrawText("SWOT System", &recttop, DT_LEFT|DT_VCENTER|DT_SINGLELINE);
 	pdc->SelectObject(oldfont);
 	font.DeleteObject(); 
+	fonttop.DeleteObject();
 	pdc->SelectObject(oldpen);
 	pen.DeleteObject(); 
 	pdc->SelectObject(oldbrush);
@@ -289,24 +322,39 @@ void CSWOTSystemView::OnLButtonDown(UINT nFlags, CPoint point)
 		InvalidateRectEx(m_chart.m_rectbox);
 	}else if(CChart::LEFTARROW == m_chart.Hittest(ConvertPoint(point))){ 
 		m_hpindex--;
-		if(m_hpindex < 0 ){
+		if(m_hpindex == m_histroy.size() - 1){
+			m_hpindex --;
+		}
+		if(m_hpindex <= 0 ){
 			m_hpindex = 0;
 		}else if(m_hpindex >= m_histroy.size()){
-			m_hpindex = m_histroy.size() - 1;
+			m_hpindex = m_histroy.size()-1;
 		}
-		m_hp = m_histroy[m_hpindex];
-		InvalidateRectEx(m_chart.m_rectbox);
+		CChart::HistogramParam *hp = m_histroy[m_hpindex];
+		fprintf(stdout, "total %d leftarraw  :%d \n", m_histroy.size(), m_hpindex);
+		if(hp != m_hp)
+		{
+			m_hp = hp;
+			InvalidateRectEx(m_chart.m_rectbox);
+			InvalidateRectEx(m_chart.m_recttitle);
+		}
 	}else if(CChart::RIGHTARROW == m_chart.Hittest(ConvertPoint(point))){ 
 		m_hpindex++;
-		if(m_hpindex < 0 ){
+		if(m_hpindex <= 0 ){
 			m_hpindex = 0;
 		}else if(m_hpindex >= m_histroy.size()){
 			m_hpindex = m_histroy.size() - 1;
 		}
-		m_hp = m_histroy[m_hpindex];
-		InvalidateRectEx(m_chart.m_rectbox);
+		
+		fprintf(stdout, "total %d rightarraw :%d \n", m_histroy.size(), m_hpindex);
+		CChart::HistogramParam *hp = m_histroy[m_hpindex];
+		if(hp != m_hp)
+		{
+			m_hp = hp;
+			InvalidateRectEx(m_chart.m_rectbox);
+			InvalidateRectEx(m_chart.m_recttitle);
+		}
 	}else{
-		printf("not hit\n");
 	}
 	CView::OnLButtonDown(nFlags, point);
 }
@@ -321,8 +369,8 @@ void CSWOTSystemView::OnPromotion()
 		const int gap = 10;
 		rc.left = gap;
 		rc.right = rc.left + (m_logolen - m_logomenugap - gap * 2);
-		rc.top = m_mainbtn[0].GetHeight()*2;
-		rc.bottom = rc.top + m_mainbtn[0].GetMenuItemCount()*40;
+		rc.top = m_mainbtn[0].GetHeight()*2+m_topheight;
+		rc.bottom = rc.top + m_mainbtn[0].GetMenuItemCount()*35;
 		m_viemenu.SetRect(rc);
 
 		m_chart.SetTitle("P R O M O T I O N");
@@ -527,8 +575,8 @@ void CSWOTSystemView::OnPromotionAdvertising()
 	const int gap = 10;
 	rc.left = gap;
 	rc.right = rc.left + (m_logolen - m_logomenugap - gap * 2);
-	rc.top = m_mainbtn[0].GetHeight()*2;
-	rc.bottom = rc.top + m_viemenu.GetItemCount()*40;
+	rc.top = m_mainbtn[0].GetHeight()*2+m_topheight;
+	rc.bottom = rc.top + m_viemenu.GetItemCount()*35;
 	m_viemenu.SetRect(rc);
 
 	m_hp = new CChart::HistogramParam;
@@ -538,8 +586,9 @@ void CSWOTSystemView::OnPromotionAdvertising()
 	m_hp->title = "1.7 A D V E R T I S I N G";
 	m_chart.SetTitle("1.7 A D V E R T I S I N G");
 	m_histroy.push_back(m_hp);
-	m_hpindex ++;
+	m_hpindex = m_histroy.size();
 	Invalidate();
+	this->SetFocus();
 }
 
 void CSWOTSystemView::OnSize(UINT nType, int cx, int cy)
@@ -578,17 +627,17 @@ void CSWOTSystemView::SetRect()
 	chart = rectview;
 	pie = rectview;
 
+	int chartgap = 140;
 	int topgap = 30, sidegap = 30, charttitleheight = 30;
 	chart.left += sidegap;
-	chart.top += topgap;
-	chart.right = rectview.left + (rectview.right - rectview.left)/2-sidegap;
+	chart.top += topgap + m_topheight;
+	chart.right = rectview.left + (rectview.right - rectview.left)/2-sidegap+chartgap;
 	chart.bottom -= charttitleheight;
 
 	pie.left = chart.right + 20;
-	pie.top += topgap;
+	pie.top += topgap + m_topheight;
 	pie.right -= sidegap;
 	//pie.bottom -= charttitleheight;
-
 
 	if(chart.right - chart.left > chart.bottom - chart.top){
 		chart.right = chart.left + chart.bottom - chart.top;

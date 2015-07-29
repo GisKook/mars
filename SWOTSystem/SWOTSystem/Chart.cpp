@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "Chart.h"
 
+extern const char * g_fontname;
 CChart::CChart(void):m_dc(NULL)
 {
 }
@@ -19,19 +20,19 @@ void CChart::DrawBackground()
 	int subboxheight = (m_rectbox.top-m_rectbox.bottom)/4;
 
 	rc.bottom = m_rectbox.top - subboxheight;
-	DrawFont("Strength", rc, subboxheight/3,"Microsoft YaHei", RGB(211,211,211), FW_BOLD);
+	DrawFont("Strength", rc, subboxheight/3,g_fontname, RGB(211,211,211), FW_BOLD);
 
 	rc.top = rc.bottom;
 	rc.bottom = rc.top - subboxheight;
-	DrawFont("Opportunity", rc, subboxheight/3,"Microsoft YaHei", RGB(211,211,211), FW_BOLD);
+	DrawFont("Opportunity", rc, subboxheight/3,g_fontname, RGB(211,211,211), FW_BOLD);
 
 	rc.top = rc.bottom;
 	rc.bottom = rc.top - subboxheight;
-	DrawFont("Weakness", rc, subboxheight/3,"Microsoft YaHei", RGB(211,211,211), FW_BOLD);
+	DrawFont("Weakness", rc, subboxheight/3,g_fontname, RGB(211,211,211), FW_BOLD);
 	
 	rc.top = rc.bottom;
 	rc.bottom = rc.top - subboxheight;
-	DrawFont("Threat", rc, subboxheight/3,"Microsoft YaHei", RGB(211,211,211), FW_BOLD);
+	DrawFont("Threat", rc, subboxheight/3,g_fontname, RGB(211,211,211), FW_BOLD);
 
 	rc = m_recttitle;
 	rc.left -= 5;
@@ -161,8 +162,8 @@ void CChart::DrawFont( CString str, RECT rc, int fontsize, CString fontname, COL
 
 void CChart::DrawTile( CString str )
 { 
-	int fontsize = (m_recttitle.top - m_recttitle.bottom);
-	DrawFont(str, m_recttitle, fontsize, "Microsoft YaHei", RGB(0,0,0), FW_BOLD);
+	int fontsize = (m_recttitle.top - m_recttitle.bottom)*0.8;
+	DrawFont(str, m_recttitle, fontsize, g_fontname, RGB(0,0,0), FW_BOLD);
 }
 
 void CChart::SetTitle( CString title )
@@ -188,9 +189,10 @@ void CChart::DrawHistogram( HistogramParam * p )
 			rect = rc;
 			rect.top = rect.bottom + (rect.right - rect.left)/2;
 			fontsize = (rect.right - rect.left)/2;
-			DrawFont(p->str[i], rect,fontsize,"Microsoft YaHei", RGB(0,0,0));
+			DrawFont(p->str[i], rect,fontsize,g_fontname, RGB(0,0,0));
 		}
 	}
+	SetTitle(p->title);
 }
 
 RECT CChart::GetHistoGram( int count, int height, int index) { 

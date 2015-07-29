@@ -2,6 +2,7 @@
 #include "Pie.h"
 #include "math.h"
 
+extern const char * g_fontname;
 const double CPie::PI=3.14159265;
 const double CPie::radio=3.14159265/180;
 const int CPie::gap = 50;
@@ -260,7 +261,7 @@ void CPie::DrawPieTitle( CString str )
 	for(int i = 0; i < charactercount; ++i){
 		x = m_rectmaxcircle.left + incircleradius + cos((180-angle)*radio)*radius;
 		y = m_rectmaxcircle.top + m_ringwidth - (radius - sin(angle*radio)*radius);
-		DrawChar(CString(str.GetAt(i)), m_ringwidth,"Microsoft YaHei", x,y,angle+270,RGB(255,255,255));
+		DrawChar(CString(str.GetAt(i)), m_ringwidth,g_fontname, x,y,angle+270,RGB(255,255,255));
 		angle+=5;
 	}
 }

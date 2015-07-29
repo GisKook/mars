@@ -80,6 +80,8 @@ private:
 protected:
 private:
 	CButtonTriangle m_mainbtn[6];
+private:
+	int m_topheight;
 
 // Generated message map functions
 public:
