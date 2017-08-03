@@ -61,28 +61,6 @@ int conf_update(char * key, char * value){
 }
 
 
-int conf_update_serial( char * serial )
-{
-	cJSON * json = load_conf_file(CONF_PATH);
-	cJSON * json_serial = cJSON_GetObjectItem(json, SERIAL);
-	json_serial->valuestring = serial;
-	cJSON_Print(json);
-
-	return 0;
-}
-
-int conf_update_ip( char * ip)
-{
-
-	return 0;
-}
-
-int conf_update_port( char * port )
-{
-
-	return 0;
-}
-
 int parse_conf(cJSON *subitem){
 	if(!subitem){
 		return 1;
@@ -92,6 +70,8 @@ int parse_conf(cJSON *subitem){
 	cJSON * json_serial;
 	cJSON * json_ip;
 	cJSON * json_port;
+	cJSON * json_query_ip;
+	cJSON * json_query_port;
 
 	json_serial = cJSON_GetObjectItem(subitem, SERIAL);
 	if(json_serial && json_serial->type == cJSON_String){
@@ -106,8 +86,16 @@ int parse_conf(cJSON *subitem){
 		if(json_port && json_port->type == cJSON_String){
 			memcpy(&g_conf.port, json_port->valuestring, strlen(json_port->valuestring));
 		}
+	}
 
-		return 0;
+	json_query_ip= cJSON_GetObjectItem(subitem, QUERY_IP);
+	if(json_query_ip&& json_query_ip->type == cJSON_String){
+		memcpy(&g_conf.query_ip, json_query_ip->valuestring, strlen(json_query_ip->valuestring));
+	}
+
+	json_query_port= cJSON_GetObjectItem(subitem, QUERY_PORT);
+	if(json_query_port&& json_query_port->type == cJSON_String){
+		memcpy(&g_conf.query_port, json_query_port->valuestring, strlen(json_query_port->valuestring));
 	}
 }
 

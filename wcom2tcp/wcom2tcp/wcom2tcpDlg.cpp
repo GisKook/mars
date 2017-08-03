@@ -82,6 +82,7 @@ ON_STN_CLICKED(IDC_STATIC_TIPS, &Cwcom2tcpDlg::OnStnClickedStaticTips)
 ON_COMMAND(ID_TRAYICON_QUIT, &Cwcom2tcpDlg::OnTrayiconQuit)
 ON_BN_CLICKED(ID_BUTTON_HELP, &Cwcom2tcpDlg::OnBnClickedButtonHelp)
 ON_BN_CLICKED(ID_BUTTON_COPY_KEY, &Cwcom2tcpDlg::OnBnClickedButtonCopyKey)
+ON_BN_CLICKED(ID_BUTTON_QUERY, &Cwcom2tcpDlg::OnBnClickedButtonQuery)
 END_MESSAGE_MAP()
 
 
@@ -444,6 +445,9 @@ void Cwcom2tcpDlg::Init()
 	for(;pos != m_comms.end(); pos++){
 		combo->AddString(*pos); 
 	}
+
+	m_dlg_query = new CQueryDlg();
+	m_dlg_query->Create(IDD_DIALOG_QUERY);
 }
 
 void Cwcom2tcpDlg::OnStnClickedStaticTips()
@@ -585,4 +589,10 @@ bool Cwcom2tcpDlg::CheckInputBlank()
 	}
 
 	return false;
+}
+
+void Cwcom2tcpDlg::OnBnClickedButtonQuery()
+{
+	// TODO: Add your control notification handler code here
+	this->m_dlg_query->ShowWindow(SW_NORMAL);
 }

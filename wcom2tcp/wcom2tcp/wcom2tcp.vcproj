@@ -223,6 +223,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\QueryDlg.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\serial.cpp"
 				>
 			</File>
@@ -310,6 +314,10 @@
 			</File>
 			<File
 				RelativePath=".\protocol_tt.h"
+				>
+			</File>
+			<File
+				RelativePath=".\QueryDlg.h"
 				>
 			</File>
 			<File

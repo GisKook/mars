@@ -5,6 +5,7 @@
 
 #include <vector>
 #include "TrayIcon.h"
+#include "QueryDlg.h"
 // Cwcom2tcpDlg ¶Ô»°¿ò
 class Cwcom2tcpDlg : public CDialog
 {
@@ -57,6 +58,7 @@ private:
 	CTrayIcon m_trayicon;
 	HICON m_icon;
     std::vector<CString> m_comms;
+	CQueryDlg *m_dlg_query;
 
 public:
 	afx_msg void OnClose();
@@ -67,4 +69,5 @@ public:
 	afx_msg void OnBnClickedButtonHelp();
 	afx_msg void OnBnClickedButtonCopyId();
 	afx_msg void OnBnClickedButtonCopyKey();
+	afx_msg void OnBnClickedButtonQuery();
 };
